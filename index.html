@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>會計世界模型與決策沙盒</title>
-  <meta name="description" content="極簡、好操作的會計物理引擎與 AI 商業決策沙盒推演系統">
+  <meta name="description" content="極簡、好操作的會計物理引擎與五大要素決策沙盒推演系統">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -24,86 +24,82 @@
     </div>
   </header>
 
-  <!-- 寬屏好操作雙欄佈局 (1200px) -->
+  <!-- 寬屏雙欄佈局 (1200px) -->
   <main class="dashboard-layout">
     
-    <!-- 左欄: 控制面板與滑動條 (即時響應，不用繁瑣點擊) -->
+    <!-- 左欄: 控制面板與參數滑桿 -->
     <aside class="control-panel">
       
-      <!-- 快速場景切換 Segmented Control -->
+      <!-- 快速場景切換 -->
       <div class="segmented-control">
         <button id="btn-preset-conservative" class="seg-btn active">穩健獲利</button>
-        <button id="btn-preset-aggressive" class="seg-btn">激進擴張</button>
-        <button id="btn-preset-crisis" class="seg-btn">融資續命</button>
+        <button id="btn-preset-aggressive" class="seg-btn">大幅擴張</button>
+        <button id="btn-preset-crisis" class="seg-btn">負債融資</button>
       </div>
 
       <div class="section-heading">
-        <h2>決策參數設定</h2>
+        <h2>五大要素流動參數</h2>
         <span class="heading-desc">滑動或輸入即可即時推演</span>
       </div>
 
-      <!-- 4 組滑動條 + 數字輸入框 (即時聯動) -->
+      <!-- 4 組滑動條 (對應五大要素流動) -->
       <div class="control-group">
         <div class="control-label-row">
-          <label for="input-sales">預估月營收</label>
-          <span class="val-display" id="disp-sales">$200,000</span>
+          <label for="range-revenue">月度收入 (Revenue)</label>
+          <span class="val-display" id="disp-revenue">$200,000</span>
         </div>
-        <input type="range" id="range-sales" min="0" max="600000" step="10000" value="200000" class="slider">
-        <input type="number" id="input-sales" value="200000" step="10000" class="hidden-input">
+        <input type="range" id="range-revenue" min="0" max="600000" step="10000" value="200000" class="slider">
       </div>
 
       <div class="control-group">
         <div class="control-label-row">
-          <label for="input-expense">預估月營運費用</label>
+          <label for="range-expense">月度費用 (Expense)</label>
           <span class="val-display" id="disp-expense">$150,000</span>
         </div>
         <input type="range" id="range-expense" min="0" max="500000" step="10000" value="150000" class="slider">
-        <input type="number" id="input-expense" value="150000" step="10000" class="hidden-input">
       </div>
 
       <div class="control-group">
         <div class="control-label-row">
-          <label for="input-capex">首月設備投資 (Capex)</label>
-          <span class="val-display" id="disp-capex">$0</span>
+          <label for="range-liability">新增負債 (Liability)</label>
+          <span class="val-display" id="disp-liability">$0</span>
         </div>
-        <input type="range" id="range-capex" min="0" max="1500000" step="50000" value="0" class="slider">
-        <input type="number" id="input-capex" value="0" step="50000" class="hidden-input">
+        <input type="range" id="range-liability" min="0" max="1000000" step="50000" value="0" class="slider">
       </div>
 
       <div class="control-group">
         <div class="control-label-row">
-          <label for="input-loan">首月銀行借款 (Loan)</label>
-          <span class="val-display" id="disp-loan">$0</span>
+          <label for="range-equity">股東增資 (Equity)</label>
+          <span class="val-display" id="disp-equity">$0</span>
         </div>
-        <input type="range" id="range-loan" min="0" max="1000000" step="50000" value="0" class="slider">
-        <input type="number" id="input-loan" value="0" step="50000" class="hidden-input">
+        <input type="range" id="range-equity" min="0" max="1000000" step="50000" value="0" class="slider">
       </div>
 
-      <!-- AI 診斷簡報卡片 -->
+      <!-- AI 評估簡報 -->
       <div id="ai-card" class="ai-card">
         <div class="ai-card-header">
           <span class="ai-tag">AI 決策評估</span>
-          <span id="ai-status-pill" class="pill-safe">安全</span>
+          <span id="ai-status-pill" class="pill-safe">健康</span>
         </div>
         <p id="ai-text" class="ai-text">載入中...</p>
       </div>
 
       <!-- 快速記帳折疊區 -->
       <details class="manual-details">
-        <summary>單筆交易注入測試</summary>
+        <summary>單筆分錄注入測試</summary>
         <div class="manual-form">
           <div class="form-row">
             <select id="select-debit" class="select-clean">
-              <option value="Cash">借: 現金 Cash (+)</option>
-              <option value="Equipment">借: 設備 Equipment (+)</option>
-              <option value="Operating Expense">借: 費用 Expense (+)</option>
-              <option value="Bank Loan">借: 還款 Loan (-)</option>
+              <option value="Asset">借: 資產 Asset (+)</option>
+              <option value="Expense">借: 費用 Expense (+)</option>
+              <option value="Liability">借: 負債減少 Liability (-)</option>
+              <option value="Equity">借: 權益減少 Equity (-)</option>
             </select>
             <select id="select-credit" class="select-clean">
-              <option value="Sales Revenue">貸: 營收 Revenue (+)</option>
-              <option value="Common Stock">貸: 股本 Stock (+)</option>
-              <option value="Cash">貸: 現金付款 Cash (-)</option>
-              <option value="Bank Loan">貸: 借款 Loan (+)</option>
+              <option value="Revenue">貸: 收入 Revenue (+)</option>
+              <option value="Liability">貸: 負債增加 Liability (+)</option>
+              <option value="Equity">貸: 權益增加 Equity (+)</option>
+              <option value="Asset">貸: 資產減少 Asset (-)</option>
             </select>
           </div>
           <div class="form-row">
@@ -117,61 +113,61 @@
     <!-- 右欄: 視覺化數據反饋與時間軸 -->
     <section class="display-panel">
       
-      <!-- 頂部指標卡片 (5 大核心科目存量) -->
+      <!-- 頂部指標卡片: 嚴格只留 5 大要素 -->
       <div class="metrics-grid">
-        <div class="metric-card" id="card-cash">
-          <span class="m-label">現金存量 (Cash)</span>
-          <div class="m-val" id="val-cash">$1,000,000</div>
+        <div class="metric-card" id="card-asset">
+          <span class="m-label">資產 (Asset)</span>
+          <div class="m-val" id="val-asset">$1,000,000</div>
           <div class="m-bar-track">
-            <div class="m-bar-fill" id="bar-cash" style="width: 50%;"></div>
+            <div class="m-bar-fill" id="bar-asset" style="width: 50%;"></div>
           </div>
         </div>
 
-        <div class="metric-card">
-          <span class="m-label">設備資產 (Equipment)</span>
-          <div class="m-val" id="val-equipment">$0</div>
+        <div class="metric-card" id="card-liability">
+          <span class="m-label">負債 (Liability)</span>
+          <div class="m-val" id="val-liability">$0</div>
           <div class="m-bar-track">
-            <div class="m-bar-fill" id="bar-equipment" style="width: 0%;"></div>
+            <div class="m-bar-fill fill-amber" id="bar-liability" style="width: 0%;"></div>
           </div>
         </div>
 
-        <div class="metric-card">
-          <span class="m-label">銀行借款 (Loan)</span>
-          <div class="m-val" id="val-loan">$0</div>
-          <div class="m-bar-track">
-            <div class="m-bar-fill fill-amber" id="bar-loan" style="width: 0%;"></div>
-          </div>
-        </div>
-
-        <div class="metric-card">
-          <span class="m-label">股東資本 (Stock)</span>
+        <div class="metric-card" id="card-equity">
+          <span class="m-label">權益 (Equity)</span>
           <div class="m-val" id="val-equity">$1,000,000</div>
           <div class="m-bar-track">
             <div class="m-bar-fill fill-dark" id="bar-equity" style="width: 50%;"></div>
           </div>
         </div>
 
-        <div class="metric-card">
-          <span class="m-label">累計利潤 (Retained)</span>
-          <div class="m-val" id="val-retained">$0</div>
+        <div class="metric-card" id="card-revenue">
+          <span class="m-label">收入 (Revenue)</span>
+          <div class="m-val" id="val-revenue">$0</div>
           <div class="m-bar-track">
-            <div class="m-bar-fill fill-emerald" id="bar-retained" style="width: 0%;"></div>
+            <div class="m-bar-fill fill-emerald" id="bar-revenue" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <div class="metric-card" id="card-expense">
+          <span class="m-label">費用 (Expense)</span>
+          <div class="m-val" id="val-expense">$0</div>
+          <div class="m-bar-track">
+            <div class="m-bar-fill fill-rose" id="bar-expense" style="width: 0%;"></div>
           </div>
         </div>
       </div>
 
-      <!-- 6 個月推演軌跡時間軸長條圖 -->
+      <!-- 6 個月資產推演軌跡長條圖 -->
       <div class="timeline-card">
         <div class="card-top-row">
-          <h3>6 個月現金流推演軌跡 (Runway Trajectory)</h3>
-          <span class="timeline-hint">即時動態模擬</span>
+          <h3>6 個月資產存量推演軌跡 (Asset Trajectory)</h3>
+          <span class="timeline-hint">Asset = Liability + Equity</span>
         </div>
         <div class="timeline-bars" id="timeline-bars">
           <!-- JS 動態生成 -->
         </div>
       </div>
 
-      <!-- 實時分類帳試算平衡表 (可折疊/展開) -->
+      <!-- 試算平衡表: 嚴格只留 5 大要素 -->
       <div class="table-card">
         <div class="card-top-row">
           <h3>試算平衡表 (Trial Balance)</h3>
@@ -180,7 +176,7 @@
         <table class="data-table">
           <thead>
             <tr>
-              <th>會計科目 (Account)</th>
+              <th>會計要素 (Element)</th>
               <th>極性 P</th>
               <th class="text-right">借方餘額 (Debit)</th>
               <th class="text-right">貸方餘額 (Credit)</th>

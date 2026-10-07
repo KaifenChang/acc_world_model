@@ -374,6 +374,7 @@ body {
 
 .fill-amber { background: var(--color-amber); }
 .fill-emerald { background: var(--color-emerald); }
+.fill-rose { background: var(--color-rose); }
 .fill-dark { background: var(--text-title); }
 .fill-danger { background: var(--color-rose) !important; }
 
