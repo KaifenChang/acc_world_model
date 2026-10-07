@@ -20,31 +20,37 @@
       
       <div class="section-heading">
         <div class="heading-row">
-          <h2>Flow Parameters</h2>
-          <button id="btn-reset" class="btn-text">Reset</button>
+          <h2 id="heading-title">動態流動參數</h2>
+          <div class="heading-actions">
+            <div class="lang-switch" role="group" aria-label="Language switch">
+              <button id="lang-zh" class="lang-btn active">中文</button>
+              <button id="lang-en" class="lang-btn">EN</button>
+            </div>
+            <button id="btn-reset" class="btn-text">重設基準</button>
+          </div>
         </div>
-        <span class="heading-desc">Adjust sliders or enter numbers directly</span>
+        <span class="heading-desc" id="heading-desc">調整滑桿或直接輸入數值</span>
       </div>
 
       <!-- Closed-Loop AI Autopilot & Stress Shock Module -->
       <div class="autopilot-card">
         <div class="autopilot-header">
-          <span class="autopilot-tag">Control Theory System</span>
-          <span id="autopilot-status-pill" class="pill-inactive">Manual Mode</span>
+          <span class="autopilot-tag" id="tag-control-theory">控制理論系統</span>
+          <span id="autopilot-status-pill" class="pill-inactive">手動模式</span>
         </div>
         <div class="autopilot-btn-row">
-          <button id="btn-toggle-autopilot" class="btn-ctrl btn-auto">Enable AI Autopilot</button>
-          <button id="btn-trigger-shock" class="btn-ctrl btn-shock">Trigger Crisis Shock</button>
+          <button id="btn-toggle-autopilot" class="btn-ctrl btn-auto">啟動 AI 自動駕駛</button>
+          <button id="btn-trigger-shock" class="btn-ctrl btn-shock">觸發危機衝擊 (壓力測試)</button>
         </div>
         <div class="autopilot-log" id="autopilot-log">
-          System idle. Sliders under manual control.
+          系統待命中。參數目前由人工手動控制。
         </div>
       </div>
 
       <!-- 4 Parameter Groups (Two-way linked slider + input) -->
       <div class="control-group">
         <div class="control-label-row">
-          <label for="input-revenue">Revenue</label>
+          <label for="input-revenue" id="label-revenue">營業收入 (Revenue)</label>
           <div class="input-inline-box">
             <span class="currency-prefix">$</span>
             <input type="number" id="input-revenue" class="num-input" value="200000" step="10000" min="0">
@@ -55,7 +61,7 @@
 
       <div class="control-group">
         <div class="control-label-row">
-          <label for="input-expense">Expense</label>
+          <label for="input-expense" id="label-expense">營業費用 (Expense)</label>
           <div class="input-inline-box">
             <span class="currency-prefix">$</span>
             <input type="number" id="input-expense" class="num-input" value="150000" step="10000" min="0">
@@ -66,7 +72,7 @@
 
       <div class="control-group">
         <div class="control-label-row">
-          <label for="input-liability">Liability</label>
+          <label for="input-liability" id="label-liability">負債總額 (Liability)</label>
           <div class="input-inline-box">
             <span class="currency-prefix">$</span>
             <input type="number" id="input-liability" class="num-input" value="0" step="50000" min="0">
@@ -77,7 +83,7 @@
 
       <div class="control-group">
         <div class="control-label-row">
-          <label for="input-equity">Equity</label>
+          <label for="input-equity" id="label-equity">股東權益 (Equity)</label>
           <div class="input-inline-box">
             <span class="currency-prefix">$</span>
             <input type="number" id="input-equity" class="num-input" value="0" step="50000" min="0">
@@ -96,10 +102,10 @@
       <div class="water-network-card">
         <div class="card-top-row">
           <div>
-            <h3>Accounting Fluid Network</h3>
-            <span class="timeline-hint">Real-time hydraulic balance: Accounts = Tanks | Transactions = Pipe Flows</span>
+            <h3 id="title-water-net">會計流體動態水網</h3>
+            <span class="timeline-hint" id="desc-water-net">即時水力動態平衡：會計要素 = 水槽儲量 ｜ 交易往來 = 管道流動</span>
           </div>
-          <span class="identity-badge" id="identity-badge">Asset = Liability + Equity</span>
+          <span class="identity-badge" id="identity-badge-top">資產 = 負債 + 權益</span>
         </div>
 
         <div class="hydraulic-circuit">
@@ -127,7 +133,7 @@
           <div class="circuit-col col-sources">
             <div class="water-tank tank-sm" id="tank-revenue">
               <div class="tank-info">
-                <span class="tank-name">Revenue (Inflow)</span>
+                <span class="tank-name" id="name-tank-revenue">營業收入 (流入源)</span>
                 <span class="tank-val" id="val-revenue">$200,000</span>
               </div>
               <div class="tank-glass">
@@ -136,12 +142,12 @@
                 </div>
                 <div class="tank-ticks"><span>$500K</span><span>$250K</span><span>$0</span></div>
               </div>
-              <span class="tank-pipe-tag">↓ Inflow Pipe</span>
+              <span class="tank-pipe-tag" id="tag-pipe-revenue">↓ 營收注入管</span>
             </div>
 
             <div class="water-tank tank-sm" id="tank-liability">
               <div class="tank-info">
-                <span class="tank-name">Liability (Debt)</span>
+                <span class="tank-name" id="name-tank-liability">負債總額 (融資)</span>
                 <span class="tank-val" id="val-liability">$0</span>
               </div>
               <div class="tank-glass">
@@ -150,7 +156,7 @@
                 </div>
                 <div class="tank-ticks"><span>$1M</span><span>$500K</span><span>$0</span></div>
               </div>
-              <span class="tank-pipe-tag">⇄ Financing Conduit</span>
+              <span class="tank-pipe-tag" id="tag-pipe-liability">⇄ 借貸雙向管</span>
             </div>
           </div>
 
@@ -158,7 +164,7 @@
           <div class="circuit-col col-center">
             <div class="water-tank tank-hero" id="tank-asset">
               <div class="tank-info">
-                <span class="tank-name hero-name">Asset Reservoir (Cash & Liquid)</span>
+                <span class="tank-name hero-name" id="name-tank-asset">核心資產水槽 (現金與流動資產)</span>
                 <span class="tank-val hero-val" id="val-asset">$1,000,000</span>
               </div>
               <div class="tank-glass glass-hero">
@@ -174,7 +180,7 @@
                 </div>
               </div>
               <div class="hero-status-row">
-                <span class="hero-tag" id="asset-tank-status">Operating Tank Normal</span>
+                <span class="hero-tag" id="asset-tank-status">核心水槽水位充足 (營運健康)</span>
               </div>
             </div>
           </div>
@@ -183,7 +189,7 @@
           <div class="circuit-col col-sinks">
             <div class="water-tank tank-sm" id="tank-expense">
               <div class="tank-info">
-                <span class="tank-name">Expense (Outflow)</span>
+                <span class="tank-name" id="name-tank-expense">營業費用 (流出池)</span>
                 <span class="tank-val" id="val-expense">$150,000</span>
               </div>
               <div class="tank-glass">
@@ -192,12 +198,12 @@
                 </div>
                 <div class="tank-ticks"><span>$500K</span><span>$250K</span><span>$0</span></div>
               </div>
-              <span class="tank-pipe-tag">↑ Outflow Drain</span>
+              <span class="tank-pipe-tag" id="tag-pipe-expense">↑ 營運支出排水</span>
             </div>
 
             <div class="water-tank tank-sm" id="tank-equity">
               <div class="tank-info">
-                <span class="tank-name">Equity (Reserve)</span>
+                <span class="tank-name" id="name-tank-equity">股東權益 (資本儲備池)</span>
                 <span class="tank-val" id="val-equity">$1,000,000</span>
               </div>
               <div class="tank-glass">
@@ -206,7 +212,7 @@
                 </div>
                 <div class="tank-ticks"><span>$2M</span><span>$1M</span><span>$0</span></div>
               </div>
-              <span class="tank-pipe-tag">⇄ Capital Retention</span>
+              <span class="tank-pipe-tag" id="tag-pipe-equity">⇄ 資本盈虧沉澱</span>
             </div>
           </div>
         </div>
@@ -215,19 +221,19 @@
       <!-- Financial Health & Solvency Ratios -->
       <div class="ratios-grid">
         <div class="ratio-item">
-          <span class="ratio-label">Monthly Net Flow</span>
+          <span class="ratio-label" id="label-ratio-netflow">每月淨現金流</span>
           <span class="ratio-value" id="ratio-net-flow">+$50,000</span>
-          <span class="ratio-sub" id="ratio-net-margin">Net Margin: +25.0%</span>
+          <span class="ratio-sub" id="ratio-net-margin">淨利率: +25.0%</span>
         </div>
         <div class="ratio-item">
-          <span class="ratio-label">Debt-to-Asset Ratio</span>
+          <span class="ratio-label" id="label-ratio-debt">資產負債率 (槓桿)</span>
           <span class="ratio-value" id="ratio-debt-ratio">0.0%</span>
-          <span class="ratio-sub" id="ratio-leverage-sub">Low Leverage</span>
+          <span class="ratio-sub" id="ratio-leverage-sub">低槓桿 (穩健)</span>
         </div>
         <div class="ratio-item">
-          <span class="ratio-label">Estimated Cash Runway</span>
-          <span class="ratio-value" id="ratio-runway">Sustainable</span>
-          <span class="ratio-sub" id="ratio-runway-sub">Zero Inflow Depletion: None</span>
+          <span class="ratio-label" id="label-ratio-runway">預估現金跑道 (存活期)</span>
+          <span class="ratio-value" id="ratio-runway">長期自給 (可持續)</span>
+          <span class="ratio-sub" id="ratio-runway-sub">正向現金流</span>
         </div>
       </div>
 
@@ -235,10 +241,10 @@
       <div class="timeline-card">
         <div class="card-top-row">
           <div>
-            <h3>Asset Trajectory (6 Months)</h3>
-            <span class="timeline-hint">Dynamic 6-Month Projection</span>
+            <h3 id="title-trajectory">資產演化軌跡 (6 個月)</h3>
+            <span class="timeline-hint" id="desc-trajectory">動態損益結轉模擬 (每月結算損益至權益)</span>
           </div>
-          <span class="identity-badge" id="identity-badge">Asset = Liability + Equity</span>
+          <span class="identity-badge" id="identity-badge-timeline">資產 = 負債 + 權益</span>
         </div>
         <div class="timeline-bars" id="timeline-bars">
           <!-- Populated by JS -->
@@ -248,16 +254,16 @@
       <!-- Trial Balance Table -->
       <div class="table-card">
         <div class="card-top-row">
-          <h3>Trial Balance</h3>
-          <span class="balanced-badge">Balanced</span>
+          <h3 id="title-trial-balance">未結轉試算平衡表</h3>
+          <span class="balanced-badge" id="badge-tb-balanced">借貸平衡 (1ᵀ z = 0)</span>
         </div>
         <table class="data-table">
           <thead>
             <tr>
-              <th>Account</th>
-              <th>Polarity P</th>
-              <th class="text-right">Debit</th>
-              <th class="text-right">Credit</th>
+              <th id="th-account">會計要素科目</th>
+              <th id="th-polarity">極性 P (借貸方向)</th>
+              <th class="text-right" id="th-debit">借方金額 (Debit)</th>
+              <th class="text-right" id="th-credit">貸方金額 (Credit)</th>
             </tr>
           </thead>
           <tbody id="tb-body">
@@ -265,7 +271,7 @@
           </tbody>
           <tfoot>
             <tr class="total-row">
-              <td colspan="2">Total</td>
+              <td colspan="2" id="td-total">借貸合計 (Total)</td>
               <td class="text-right" id="total-debit">$0</td>
               <td class="text-right" id="total-credit">$0</td>
             </tr>

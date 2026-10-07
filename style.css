@@ -38,6 +38,43 @@ body {
   align-items: center;
 }
 
+.heading-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.lang-switch {
+  display: inline-flex;
+  background: #F4F4F5;
+  border-radius: 6px;
+  padding: 2px;
+  border: 1px solid var(--border-light);
+}
+
+.lang-btn {
+  background: none;
+  border: none;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.15rem 0.55rem;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: all 0.15s ease;
+  font-family: inherit;
+}
+
+.lang-btn:hover {
+  color: var(--text-title);
+}
+
+.lang-btn.active {
+  background: #FFFFFF;
+  color: var(--text-title);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
 .btn-text {
   background: none;
   border: none;
