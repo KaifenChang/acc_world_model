@@ -336,6 +336,61 @@ body {
 .fill-dark { background: var(--text-title); }
 .fill-danger { background: var(--color-rose) !important; }
 
+/* Financial Solvency Ratios Grid */
+.ratios-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.8rem;
+}
+
+.ratio-item {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.ratio-label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.ratio-value {
+  font-family: var(--font-mono);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-title);
+}
+
+.ratio-sub {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+}
+
+.identity-badge {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-title);
+  background: #F4F4F5;
+  padding: 0.25rem 0.65rem;
+  border-radius: 4px;
+}
+
+.bar-delta {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 600;
+}
+.delta-pos { color: var(--color-emerald); }
+.delta-neg { color: var(--color-rose); }
+
 /* 時間軸長條圖卡片 */
 .timeline-card, .table-card {
   background: var(--bg-surface);

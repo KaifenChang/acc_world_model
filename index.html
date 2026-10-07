@@ -136,11 +136,33 @@
         </div>
       </div>
 
+      <!-- Financial Health & Solvency Ratios -->
+      <div class="ratios-grid">
+        <div class="ratio-item">
+          <span class="ratio-label">Monthly Net Flow</span>
+          <span class="ratio-value" id="ratio-net-flow">+$50,000</span>
+          <span class="ratio-sub" id="ratio-net-margin">Net Margin: +25.0%</span>
+        </div>
+        <div class="ratio-item">
+          <span class="ratio-label">Debt-to-Asset Ratio</span>
+          <span class="ratio-value" id="ratio-debt-ratio">0.0%</span>
+          <span class="ratio-sub" id="ratio-leverage-sub">Low Leverage</span>
+        </div>
+        <div class="ratio-item">
+          <span class="ratio-label">Estimated Cash Runway</span>
+          <span class="ratio-value" id="ratio-runway">Sustainable</span>
+          <span class="ratio-sub" id="ratio-runway-sub">Zero Inflow Depletion: None</span>
+        </div>
+      </div>
+
       <!-- 6-Month Asset Trajectory Chart -->
       <div class="timeline-card">
         <div class="card-top-row">
-          <h3>Asset Trajectory (6 Months)</h3>
-          <span class="timeline-hint">Asset = Liability + Equity</span>
+          <div>
+            <h3>Asset Trajectory (6 Months)</h3>
+            <span class="timeline-hint">Dynamic balance projection: x(t+1) = x(t) + B · u(t)</span>
+          </div>
+          <span class="identity-badge" id="identity-badge">Asset = Liability + Equity</span>
         </div>
         <div class="timeline-bars" id="timeline-bars">
           <!-- Populated by JS -->

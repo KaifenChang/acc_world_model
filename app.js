@@ -149,14 +149,74 @@ function runLiveSimulation() {
   // 1. 刷新頂部五大要素卡片
   updateMetricsCards(simEngine);
 
+  // 1.5 刷新標準會計財務比率
+  updateFinancialRatios(simEngine, rev, exp, startingAsset);
+
   // 2. 刷新 6 個月軌跡圖
-  renderTimelineBars(timelineData);
+  renderTimelineBars(timelineData, rev, exp);
 
   // 3. 刷新五大要素試算表
   updateTrialBalanceTable(simEngine);
 
   // 4. 刷新 AI 評估簡報
   updateAIDiagnosis(bankruptMonth, timelineData, rev, exp);
+}
+
+// 刷新標準會計財務比率與恆等式
+function updateFinancialRatios(engine, rev, exp, startingAsset) {
+  const asset = engine.getBalance("Asset");
+  const liability = engine.getBalance("Liability");
+  const equity = engine.getBalance("Equity");
+  const netFlow = rev - exp;
+
+  // 1. Monthly Net Flow & Net Margin
+  const netFlowEl = document.getElementById("ratio-net-flow");
+  const netMarginEl = document.getElementById("ratio-net-margin");
+  if (netFlow >= 0) {
+    netFlowEl.textContent = `+${formatMoney(netFlow)}`;
+    netFlowEl.style.color = "#059669";
+  } else {
+    netFlowEl.textContent = `-${formatMoney(Math.abs(netFlow))}`;
+    netFlowEl.style.color = "#E11D48";
+  }
+
+  const marginPct = rev > 0 ? ((netFlow / rev) * 100).toFixed(1) : "0.0";
+  netMarginEl.textContent = `Net Margin: ${marginPct}%`;
+
+  // 2. Debt-to-Asset Ratio
+  const debtRatioEl = document.getElementById("ratio-debt-ratio");
+  const leverageSubEl = document.getElementById("ratio-leverage-sub");
+  const debtPct = asset > 0 ? ((liability / asset) * 100).toFixed(1) : "0.0";
+  debtRatioEl.textContent = `${debtPct}%`;
+  if (parseFloat(debtPct) > 60) {
+    leverageSubEl.textContent = "High Risk (>60%)";
+    debtRatioEl.style.color = "#E11D48";
+  } else if (parseFloat(debtPct) > 30) {
+    leverageSubEl.textContent = "Moderate Leverage";
+    debtRatioEl.style.color = "#D97706";
+  } else {
+    leverageSubEl.textContent = "Conservative / Low";
+    debtRatioEl.style.color = "#09090B";
+  }
+
+  // 3. Estimated Cash Runway
+  const runwayEl = document.getElementById("ratio-runway");
+  const runwaySubEl = document.getElementById("ratio-runway-sub");
+  if (netFlow >= 0) {
+    runwayEl.textContent = "Sustainable (∞)";
+    runwayEl.style.color = "#059669";
+    runwaySubEl.textContent = "Positive Cash Flow";
+  } else {
+    const burn = Math.abs(netFlow);
+    const months = startingAsset > 0 ? (startingAsset / burn).toFixed(1) : "0.0";
+    runwayEl.textContent = `${months} Months`;
+    runwayEl.style.color = "#E11D48";
+    runwaySubEl.textContent = `Depletion at $${burn.toLocaleString()}/mo`;
+  }
+
+  // 4. Identity verification badge
+  const identityBadge = document.getElementById("identity-badge");
+  identityBadge.textContent = `${formatMoney(asset)} = ${formatMoney(liability)} + ${formatMoney(equity)}`;
 }
 
 // 刷新五大要素指標卡片
@@ -198,9 +258,10 @@ function updateMetricsCards(engine) {
 }
 
 // 刷新 6 個月資產存量長條圖
-function renderTimelineBars(data) {
+function renderTimelineBars(data, rev, exp) {
   timelineBarsContainer.innerHTML = "";
   const maxAsset = Math.max(1, ...data.map(d => Math.abs(d.asset)));
+  const netFlow = rev - exp;
 
   data.forEach(item => {
     const heightPct = Math.max(8, Math.min(100, (Math.abs(item.asset) / Math.max(maxAsset, 1500000)) * 100));
@@ -211,10 +272,13 @@ function renderTimelineBars(data) {
       <span class="bar-value" style="color:${item.bankrupt ? '#E11D48' : '#09090B'}">
         ${formatMoney(item.asset)}
       </span>
+      <span class="bar-delta ${netFlow >= 0 ? 'delta-pos' : 'delta-neg'}">
+        ${netFlow >= 0 ? '+' : '-'}${formatMoney(Math.abs(netFlow))}
+      </span>
       <div class="bar-tube">
         <div class="bar-fill-inner ${item.bankrupt ? 'deficit' : ''}" style="height:${heightPct}%;"></div>
       </div>
-      <span class="bar-month-tag">M${item.month}</span>
+      <span class="bar-month-tag">Month ${item.month}</span>
       <span class="bar-badge-pill ${item.bankrupt ? 'pill-fail' : 'pill-ok'}">
         ${item.bankrupt ? 'Deficit' : 'Solvent'}
       </span>
