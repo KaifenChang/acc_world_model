@@ -32,34 +32,10 @@ body {
   min-height: 100vh;
 }
 
-/* 頂部極簡導覽列 */
-.navbar {
-  background: var(--bg-surface);
-  border-bottom: 1px solid var(--border-light);
-  padding: 0.75rem 2rem;
+.heading-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-.nav-status {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  font-size: 0.75rem;
-  font-family: var(--font-mono);
-}
-
-.status-indicator {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--color-emerald);
-}
-
-.status-text {
-  color: var(--color-emerald);
-  font-weight: 600;
 }
 
 .btn-text {
@@ -69,15 +45,19 @@ body {
   cursor: pointer;
   font-size: 0.75rem;
   text-decoration: underline;
-  margin-left: 0.5rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
 }
 
-.btn-text:hover { color: var(--text-title); }
+.btn-text:hover {
+  color: var(--text-title);
+  background: #F4F4F5;
+}
 
 /* 主儀表板寬屏雙欄 (1200px) */
 .dashboard-layout {
   max-width: 1240px;
-  margin: 1.5rem auto;
+  margin: 2.2rem auto;
   padding: 0 1.5rem;
   display: grid;
   grid-template-columns: 380px 1fr;

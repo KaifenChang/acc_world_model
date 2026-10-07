@@ -12,15 +12,6 @@
 </head>
 <body>
 
-  <!-- Top Navigation -->
-  <header class="navbar">
-    <div class="nav-status">
-      <span class="status-indicator"></span>
-      <span class="status-text">1ᵀ z = 0 (Balanced)</span>
-    </div>
-    <button id="btn-reset" class="btn-text">Reset</button>
-  </header>
-
   <!-- Widescreen Layout (1200px) -->
   <main class="dashboard-layout">
     
@@ -28,7 +19,10 @@
     <aside class="control-panel">
       
       <div class="section-heading">
-        <h2>Flow Parameters</h2>
+        <div class="heading-row">
+          <h2>Flow Parameters</h2>
+          <button id="btn-reset" class="btn-text">Reset</button>
+        </div>
         <span class="heading-desc">Adjust sliders or enter numbers directly</span>
       </div>
 
@@ -149,7 +143,7 @@
         <div class="card-top-row">
           <div>
             <h3>Asset Trajectory (6 Months)</h3>
-            <span class="timeline-hint">Dynamic balance projection: x(t+1) = x(t) + B · u(t)</span>
+            <span class="timeline-hint">Dynamic 6-Month Projection</span>
           </div>
           <span class="identity-badge" id="identity-badge">Asset = Liability + Equity</span>
         </div>
@@ -162,7 +156,7 @@
       <div class="table-card">
         <div class="card-top-row">
           <h3>Trial Balance</h3>
-          <span class="balanced-badge">Balanced (1ᵀ z = 0)</span>
+          <span class="balanced-badge">Balanced</span>
         </div>
         <table class="data-table">
           <thead>
