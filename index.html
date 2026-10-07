@@ -2,10 +2,9 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>FlowLedger | 會計水流世界模型</title>
-  <meta name="description" content="簡約風格的會計物理引擎與 AI 商業推演工具">
-  <!-- Fonts -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FlowLedger | 會計物理引擎與商業世界模型</title>
+  <meta name="description" content="極簡、好操作的會計物理引擎與 AI 商業決策沙盒推演系統">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -13,231 +12,197 @@
 </head>
 <body>
 
-  <!-- 頂部 IG 風格導覽列 -->
-  <header class="ig-nav">
-    <div class="nav-inner">
-      <div class="nav-brand">
-        <span class="brand-text">FlowLedger</span>
-      </div>
-      <div id="conservation-badge" class="ig-badge">
-        <span class="ig-badge-dot"></span>
-        <span id="badge-text">1ᵀ z = 0 守恆</span>
-      </div>
+  <!-- 頂部極簡導覽 -->
+  <header class="navbar">
+    <div class="nav-brand">
+      <span class="brand-title">FlowLedger</span>
+      <span class="brand-badge">World Model</span>
+    </div>
+    <div class="nav-status">
+      <span class="status-indicator"></span>
+      <span class="status-text">基爾霍夫守恆律 1ᵀ z = 0</span>
+      <button id="btn-reset" class="btn-text">重設</button>
     </div>
   </header>
 
-  <main class="feed-container">
+  <!-- 寬屏好操作雙欄佈局 (1200px) -->
+  <main class="dashboard-layout">
     
-    <!-- 1. 簡約科目存量水箱列 (Clean Stories Bar) -->
-    <section class="stories-section">
-      <div class="stories-header">
-        <span class="section-label">科目狀態 (Accounts State)</span>
-        <span class="live-pill">LIVE</span>
-      </div>
-      <div class="stories-scroll">
-        <!-- 現金 -->
-        <div class="story-item" id="story-cash">
-          <div class="story-ring active-ring">
-            <div class="story-avatar">
-              <span class="avatar-code">CSH</span>
-              <div id="ring-fill-cash" class="avatar-fill" style="height: 65%;"></div>
-            </div>
-          </div>
-          <span class="story-title">現金</span>
-          <span class="story-val" id="tank-val-cash">$1,000,000</span>
-        </div>
-
-        <!-- 設備 -->
-        <div class="story-item" id="story-equipment">
-          <div class="story-ring">
-            <div class="story-avatar">
-              <span class="avatar-code">EQP</span>
-              <div id="ring-fill-equipment" class="avatar-fill" style="height: 0%;"></div>
-            </div>
-          </div>
-          <span class="story-title">設備</span>
-          <span class="story-val" id="tank-val-equipment">$0</span>
-        </div>
-
-        <!-- 貸款 -->
-        <div class="story-item" id="story-loan">
-          <div class="story-ring">
-            <div class="story-avatar">
-              <span class="avatar-code">LON</span>
-              <div id="ring-fill-loan" class="avatar-fill fill-amber" style="height: 0%;"></div>
-            </div>
-          </div>
-          <span class="story-title">貸款</span>
-          <span class="story-val" id="tank-val-loan">$0</span>
-        </div>
-
-        <!-- 股本 -->
-        <div class="story-item" id="story-equity">
-          <div class="story-ring">
-            <div class="story-avatar">
-              <span class="avatar-code">STK</span>
-              <div id="ring-fill-equity" class="avatar-fill fill-purple" style="height: 65%;"></div>
-            </div>
-          </div>
-          <span class="story-title">股本</span>
-          <span class="story-val" id="tank-val-equity">$1,000,000</span>
-        </div>
-
-        <!-- 留存收益 -->
-        <div class="story-item" id="story-retained">
-          <div class="story-ring">
-            <div class="story-avatar">
-              <span class="avatar-code">RET</span>
-              <div id="ring-fill-retained" class="avatar-fill fill-emerald" style="height: 5%;"></div>
-            </div>
-          </div>
-          <span class="story-title">利潤</span>
-          <span class="story-val" id="tank-val-retained">$0</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- 2. AI 商業推演卡片 -->
-    <article class="ig-card">
-      <div class="card-user-header">
-        <div class="user-info">
-          <div class="user-avatar-monogram">WM</div>
-          <div>
-            <div class="username">cfo.worldmodel</div>
-            <div class="user-meta">AI 決策沙盒推演 • 6 個月前瞻</div>
-          </div>
-        </div>
+    <!-- 左欄: 控制面板與滑動條 (即時響應，不用繁瑣點擊) -->
+    <aside class="control-panel">
+      
+      <!-- 快速場景切換 Segmented Control -->
+      <div class="segmented-control">
+        <button id="btn-preset-conservative" class="seg-btn active">穩健獲利</button>
+        <button id="btn-preset-aggressive" class="seg-btn">激進擴張</button>
+        <button id="btn-preset-crisis" class="seg-btn">融資續命</button>
       </div>
 
-      <!-- 快速場景切換 Pills -->
-      <div class="scenario-pills">
-        <button id="btn-preset-conservative" class="pill-btn pill-active">穩健獲利</button>
-        <button id="btn-preset-aggressive" class="pill-btn">激進擴張</button>
-        <button id="btn-preset-crisis" class="pill-btn">融資續命</button>
+      <div class="section-heading">
+        <h2>決策參數設定</h2>
+        <span class="heading-desc">滑動或輸入即可即時推演</span>
       </div>
 
-      <!-- 參數調整輸入 -->
-      <div class="card-inputs">
-        <div class="input-row">
-          <div class="input-cell">
-            <span class="cell-label">預估月營收</span>
-            <div class="cell-input-box">
-              <span class="currency-symbol">$</span>
-              <input type="number" id="input-sales" value="200000" step="10000">
-            </div>
+      <!-- 4 組滑動條 + 數字輸入框 (即時聯動) -->
+      <div class="control-group">
+        <div class="control-label-row">
+          <label for="input-sales">預估月營收</label>
+          <span class="val-display" id="disp-sales">$200,000</span>
+        </div>
+        <input type="range" id="range-sales" min="0" max="600000" step="10000" value="200000" class="slider">
+        <input type="number" id="input-sales" value="200000" step="10000" class="hidden-input">
+      </div>
+
+      <div class="control-group">
+        <div class="control-label-row">
+          <label for="input-expense">預估月營運費用</label>
+          <span class="val-display" id="disp-expense">$150,000</span>
+        </div>
+        <input type="range" id="range-expense" min="0" max="500000" step="10000" value="150000" class="slider">
+        <input type="number" id="input-expense" value="150000" step="10000" class="hidden-input">
+      </div>
+
+      <div class="control-group">
+        <div class="control-label-row">
+          <label for="input-capex">首月設備投資 (Capex)</label>
+          <span class="val-display" id="disp-capex">$0</span>
+        </div>
+        <input type="range" id="range-capex" min="0" max="1500000" step="50000" value="0" class="slider">
+        <input type="number" id="input-capex" value="0" step="50000" class="hidden-input">
+      </div>
+
+      <div class="control-group">
+        <div class="control-label-row">
+          <label for="input-loan">首月銀行借款 (Loan)</label>
+          <span class="val-display" id="disp-loan">$0</span>
+        </div>
+        <input type="range" id="range-loan" min="0" max="1000000" step="50000" value="0" class="slider">
+        <input type="number" id="input-loan" value="0" step="50000" class="hidden-input">
+      </div>
+
+      <!-- AI 診斷簡報卡片 -->
+      <div id="ai-card" class="ai-card">
+        <div class="ai-card-header">
+          <span class="ai-tag">AI 決策評估</span>
+          <span id="ai-status-pill" class="pill-safe">安全</span>
+        </div>
+        <p id="ai-text" class="ai-text">載入中...</p>
+      </div>
+
+      <!-- 快速記帳折疊區 -->
+      <details class="manual-details">
+        <summary>單筆交易注入測試</summary>
+        <div class="manual-form">
+          <div class="form-row">
+            <select id="select-debit" class="select-clean">
+              <option value="Cash">借: 現金 Cash (+)</option>
+              <option value="Equipment">借: 設備 Equipment (+)</option>
+              <option value="Operating Expense">借: 費用 Expense (+)</option>
+              <option value="Bank Loan">借: 還款 Loan (-)</option>
+            </select>
+            <select id="select-credit" class="select-clean">
+              <option value="Sales Revenue">貸: 營收 Revenue (+)</option>
+              <option value="Common Stock">貸: 股本 Stock (+)</option>
+              <option value="Cash">貸: 現金付款 Cash (-)</option>
+              <option value="Bank Loan">貸: 借款 Loan (+)</option>
+            </select>
           </div>
-          <div class="input-cell">
-            <span class="cell-label">預估月費用</span>
-            <div class="cell-input-box">
-              <span class="currency-symbol">$</span>
-              <input type="number" id="input-expense" value="150000" step="10000">
-            </div>
+          <div class="form-row">
+            <input type="number" id="manual-amount" class="input-clean" value="50000" step="10000">
+            <button id="btn-inject-tx" class="btn-solid">記入</button>
+          </div>
+        </div>
+      </details>
+    </aside>
+
+    <!-- 右欄: 視覺化數據反饋與時間軸 -->
+    <section class="display-panel">
+      
+      <!-- 頂部指標卡片 (5 大核心科目存量) -->
+      <div class="metrics-grid">
+        <div class="metric-card" id="card-cash">
+          <span class="m-label">現金存量 (Cash)</span>
+          <div class="m-val" id="val-cash">$1,000,000</div>
+          <div class="m-bar-track">
+            <div class="m-bar-fill" id="bar-cash" style="width: 50%;"></div>
           </div>
         </div>
 
-        <div class="input-row">
-          <div class="input-cell">
-            <span class="cell-label">首月設備投資</span>
-            <div class="cell-input-box">
-              <span class="currency-symbol">$</span>
-              <input type="number" id="input-capex" value="0" step="50000">
-            </div>
+        <div class="metric-card">
+          <span class="m-label">設備資產 (Equipment)</span>
+          <div class="m-val" id="val-equipment">$0</div>
+          <div class="m-bar-track">
+            <div class="m-bar-fill" id="bar-equipment" style="width: 0%;"></div>
           </div>
-          <div class="input-cell">
-            <span class="cell-label">首月銀行貸款</span>
-            <div class="cell-input-box">
-              <span class="currency-symbol">$</span>
-              <input type="number" id="input-loan" value="0" step="50000">
-            </div>
+        </div>
+
+        <div class="metric-card">
+          <span class="m-label">銀行借款 (Loan)</span>
+          <div class="m-val" id="val-loan">$0</div>
+          <div class="m-bar-track">
+            <div class="m-bar-fill fill-amber" id="bar-loan" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <span class="m-label">股東資本 (Stock)</span>
+          <div class="m-val" id="val-equity">$1,000,000</div>
+          <div class="m-bar-track">
+            <div class="m-bar-fill fill-dark" id="bar-equity" style="width: 50%;"></div>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <span class="m-label">累計利潤 (Retained)</span>
+          <div class="m-val" id="val-retained">$0</div>
+          <div class="m-bar-track">
+            <div class="m-bar-fill fill-emerald" id="bar-retained" style="width: 0%;"></div>
           </div>
         </div>
       </div>
 
-      <!-- 動作主按鈕 -->
-      <div class="card-action-bar">
-        <button id="btn-run-simulation" class="ig-main-btn">
-          執行 AI 決策沙盒推演
-        </button>
-      </div>
-
-      <!-- 推演時間軸膠囊 (6-month trajectory) -->
-      <div class="timeline-tray" id="trajectory-timeline">
-        <!-- JS 動態生成 -->
-      </div>
-
-      <!-- AI 診斷分析 (Caption) -->
-      <div class="post-caption">
-        <span class="caption-user">cfo.worldmodel</span>
-        <span id="ai-conclusion-text" class="caption-text">
-          分析就緒。點擊上方按鈕執行 6 個月離散狀態推演。
-        </span>
-      </div>
-    </article>
-
-    <!-- 3. 試算平衡與手動記帳 -->
-    <article class="ig-card">
-      <div class="card-user-header">
-        <div class="user-info">
-          <div class="user-avatar-monogram avatar-ledger">TB</div>
-          <div>
-            <div class="username">trial.balance</div>
-            <div class="user-meta">基爾霍夫守恆 • 實時分類帳</div>
-          </div>
+      <!-- 6 個月推演軌跡時間軸長條圖 -->
+      <div class="timeline-card">
+        <div class="card-top-row">
+          <h3>6 個月現金流推演軌跡 (Runway Trajectory)</h3>
+          <span class="timeline-hint">即時動態模擬</span>
         </div>
-        <span class="clean-tag">100% 守恆</span>
+        <div class="timeline-bars" id="timeline-bars">
+          <!-- JS 動態生成 -->
+        </div>
       </div>
 
-      <!-- 簡潔的分類帳表格 -->
-      <div class="clean-table-box">
-        <table class="clean-table">
+      <!-- 實時分類帳試算平衡表 (可折疊/展開) -->
+      <div class="table-card">
+        <div class="card-top-row">
+          <h3>試算平衡表 (Trial Balance)</h3>
+          <span class="balanced-badge">借貸完全平衡</span>
+        </div>
+        <table class="data-table">
           <thead>
             <tr>
-              <th>科目</th>
-              <th>方向</th>
-              <th class="text-right">借方</th>
-              <th class="text-right">貸方</th>
+              <th>會計科目 (Account)</th>
+              <th>極性 P</th>
+              <th class="text-right">借方餘額 (Debit)</th>
+              <th class="text-right">貸方餘額 (Credit)</th>
             </tr>
           </thead>
           <tbody id="tb-body">
             <!-- JS 動態填充 -->
           </tbody>
           <tfoot>
-            <tr class="tfoot-row">
-              <td colspan="2">合計</td>
-              <td id="total-debit" class="text-right">$0</td>
-              <td id="total-credit" class="text-right">$0</td>
+            <tr class="total-row">
+              <td colspan="2">合計 (Balance Check)</td>
+              <td class="text-right" id="total-debit">$0</td>
+              <td class="text-right" id="total-credit">$0</td>
             </tr>
           </tfoot>
         </table>
       </div>
 
-      <!-- 手動注入流水 -->
-      <div class="quick-inject-box">
-        <span class="inject-title">手動注入單筆流體事件</span>
-        <div class="inject-flex">
-          <select id="select-debit" class="ig-select">
-            <option value="Cash">借方: 現金</option>
-            <option value="Equipment">借方: 設備</option>
-            <option value="Operating Expense">借方: 費用</option>
-            <option value="Bank Loan">借方: 還款</option>
-          </select>
-          <select id="select-credit" class="ig-select">
-            <option value="Sales Revenue">貸方: 營收</option>
-            <option value="Common Stock">貸方: 股本</option>
-            <option value="Cash">貸方: 現金</option>
-            <option value="Bank Loan">貸方: 借款</option>
-          </select>
-          <input type="number" id="manual-amount" class="ig-input-num" value="50000" step="10000">
-          <button id="btn-inject-tx" class="ig-sub-btn">記帳</button>
-        </div>
-      </div>
-    </article>
+    </section>
 
   </main>
-
-  <footer class="ig-footer">
-    <p>FlowLedger &copy; 2026 • Minimal World Model</p>
-  </footer>
 
   <script src="app.js"></script>
 </body>

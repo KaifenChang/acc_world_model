@@ -1,18 +1,19 @@
 :root {
-  --bg-page: #FAFAFA;
-  --bg-card: #FFFFFF;
-  --text-main: #18181B;
-  --text-secondary: #52525B;
-  --text-muted: #A1A1AA;
-  --border-light: #F4F4F5;
-  --border-subtle: #E4E4E7;
+  --bg-app: #F8F9FA;
+  --bg-surface: #FFFFFF;
+  --text-title: #09090B;
+  --text-body: #3F3F46;
+  --text-muted: #71717A;
   
-  --ig-primary: #18181B;
-  --ig-primary-hover: #27272A;
-  --ig-danger: #EF4444;
-  --ig-success: #10B981;
+  --border-light: #E4E4E7;
+  --border-subtle: #F4F4F5;
   
-  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --color-primary: #18181B;
+  --color-emerald: #059669;
+  --color-amber: #D97706;
+  --color-rose: #E11D48;
+  
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 }
 
@@ -24,31 +25,18 @@
 }
 
 body {
-  background-color: var(--bg-page);
-  color: var(--text-main);
+  background-color: var(--bg-app);
+  color: var(--text-body);
   font-family: var(--font-sans);
-  line-height: 1.4;
-  padding-bottom: 2rem;
+  line-height: 1.5;
+  min-height: 100vh;
 }
 
-/* 頂部 IG 簡約導覽列 */
-.ig-nav {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--border-subtle);
-  height: 56px;
-  display: flex;
-  align-items: center;
-}
-
-.nav-inner {
-  max-width: 640px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 0 1.2rem;
+/* 頂部極簡導覽列 */
+.navbar {
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-light);
+  padding: 0.75rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -56,491 +44,463 @@ body {
 
 .nav-brand {
   display: flex;
-  align-items: baseline;
+  align-items: center;
+  gap: 0.6rem;
 }
 
-.brand-text {
-  font-size: 1.25rem;
+.brand-title {
+  font-size: 1.15rem;
   font-weight: 700;
   letter-spacing: -0.5px;
-  color: #000;
+  color: var(--text-title);
 }
 
-.ig-badge {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: 0.72rem;
-  font-family: var(--font-mono);
+.brand-badge {
+  font-size: 0.68rem;
   font-weight: 600;
-  color: #059669;
-  background: #ECFDF5;
-  padding: 0.25rem 0.6rem;
-  border-radius: 20px;
-  border: 1px solid rgba(16, 185, 129, 0.2);
-}
-
-.ig-badge-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #10B981;
-}
-
-/* 單欄置中 Feed 佈局 */
-.feed-container {
-  max-width: 640px;
-  margin: 1.2rem auto;
-  padding: 0 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
-}
-
-/* 1. 限時動態風格水箱列 (Stories Bar) */
-.stories-section {
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: 12px;
-  padding: 0.9rem 1rem 0.8rem;
-}
-
-.stories-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.8rem;
-}
-
-.section-label {
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.5px;
   color: var(--text-muted);
-  text-transform: uppercase;
-}
-
-.live-pill {
-  font-size: 0.62rem;
-  font-weight: 700;
-  color: #059669;
-  background: #ECFDF5;
-  padding: 0.15rem 0.4rem;
+  background: var(--border-subtle);
+  padding: 0.15rem 0.45rem;
   border-radius: 4px;
 }
 
-.stories-scroll {
-  display: flex;
-  gap: 1rem;
-  overflow-x: auto;
-  padding-bottom: 0.2rem;
-  scrollbar-width: none;
-}
-.stories-scroll::-webkit-scrollbar { display: none; }
-
-.story-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex-shrink: 0;
-  width: 68px;
-}
-
-.story-ring {
-  width: 58px;
-  height: 58px;
-  border-radius: 50%;
-  padding: 2px;
-  background: var(--border-subtle);
+.nav-status {
   display: flex;
   align-items: center;
-  justify-content: center;
-  transition: transform 0.15s ease;
-}
-
-.story-ring.active-ring {
-  background: #18181B;
-}
-
-.story-avatar {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  background: #fff;
-  border: 2px solid #fff;
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.avatar-code {
-  position: relative;
-  z-index: 2;
-  font-family: var(--font-mono);
+  gap: 0.6rem;
   font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--text-main);
-}
-
-.avatar-fill {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background: rgba(0, 0, 0, 0.15);
-  transition: height 0.5s ease;
-  z-index: 1;
-}
-
-.fill-amber { background: rgba(217, 119, 6, 0.2); }
-.fill-purple { background: rgba(124, 58, 237, 0.2); }
-.fill-emerald { background: rgba(5, 150, 105, 0.2); }
-.fill-danger { background: rgba(239, 68, 68, 0.4) !important; }
-
-.story-title {
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-  margin-top: 0.4rem;
-  white-space: nowrap;
-}
-
-.story-val {
-  font-size: 0.68rem;
   font-family: var(--font-mono);
-  font-weight: 600;
-  color: var(--text-muted);
 }
 
-/* 2. IG 貼文卡片 (Card) */
-.ig-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
+.status-indicator {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-emerald);
+}
+
+.status-text {
+  color: var(--color-emerald);
+  font-weight: 600;
+}
+
+.btn-text {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.75rem;
+  text-decoration: underline;
+  margin-left: 0.5rem;
+}
+
+.btn-text:hover { color: var(--text-title); }
+
+/* 主儀表板寬屏雙欄 (1200px) */
+.dashboard-layout {
+  max-width: 1240px;
+  margin: 1.5rem auto;
+  padding: 0 1.5rem;
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+@media (max-width: 960px) {
+  .dashboard-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 左側控制面板 */
+.control-panel {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
   border-radius: 12px;
-  overflow: hidden;
+  padding: 1.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
 }
 
-.card-user-header {
-  padding: 0.85rem 1rem;
+/* 分段切換器 (Segmented Control) */
+.segmented-control {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid var(--border-light);
-}
-
-.user-info {
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
-}
-
-.user-avatar-monogram {
-  width: 32px;
-  height: 32px;
+  background: var(--border-subtle);
+  padding: 3px;
   border-radius: 8px;
-  background: #18181B;
-  color: #fff;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  margin-bottom: 1.2rem;
 }
 
-.avatar-ledger {
-  background: #059669;
-}
-
-.username {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--text-main);
-}
-
-.user-meta {
-  font-size: 0.7rem;
-  color: var(--text-muted);
-}
-
-.clean-tag {
-  font-size: 0.7rem;
-  font-family: var(--font-mono);
-  font-weight: 600;
-  color: #059669;
-  background: #ECFDF5;
-  padding: 0.2rem 0.5rem;
-  border-radius: 6px;
-}
-
-/* 膠囊選擇按鈕 (Pills) */
-.scenario-pills {
-  display: flex;
-  gap: 0.4rem;
-  padding: 0.85rem 1rem 0.4rem;
-}
-
-.pill-btn {
+.seg-btn {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 0.45rem 0.5rem;
   font-family: var(--font-sans);
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   font-weight: 600;
-  padding: 0.35rem 0.75rem;
+  color: var(--text-muted);
   border-radius: 6px;
-  border: 1px solid var(--border-subtle);
-  background: #fff;
-  color: var(--text-secondary);
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
-.pill-btn:hover {
+.seg-btn.active {
+  background: var(--bg-surface);
+  color: var(--text-title);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.section-heading {
+  margin-bottom: 1rem;
+}
+
+.section-heading h2 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-title);
+}
+
+.heading-desc {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* 滑動條控制項 (Slider Group) */
+.control-group {
+  margin-bottom: 1.1rem;
+}
+
+.control-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.4rem;
+}
+
+.control-label-row label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-title);
+}
+
+.val-display {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-title);
+}
+
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--border-light);
+  outline: none;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: transform 0.1s ease;
+}
+
+.slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+.hidden-input { display: none; }
+
+/* AI 評估卡片 */
+.ai-card {
   background: #F4F4F5;
-  color: var(--text-main);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  padding: 0.9rem;
+  margin-top: 1.2rem;
 }
 
-.pill-btn.pill-active {
-  background: #18181B;
-  color: #fff;
-  border-color: #18181B;
+.ai-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.4rem;
 }
 
-/* 參數輸入區域 */
-.card-inputs {
-  padding: 0.6rem 1rem 0.8rem;
+.ai-tag {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.pill-safe {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--color-emerald);
+  background: #ECFDF5;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+}
+
+.pill-danger {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--color-rose);
+  background: #FFF1F2;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+}
+
+.ai-text {
+  font-size: 0.82rem;
+  color: var(--text-body);
+  line-height: 1.5;
+}
+
+/* 手動分錄折疊區 */
+.manual-details {
+  margin-top: 1.2rem;
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 0.8rem;
+}
+
+.manual-details summary {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  user-select: none;
+}
+
+.manual-form {
+  margin-top: 0.8rem;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-.input-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+.form-row {
+  display: flex;
   gap: 0.5rem;
 }
 
-.input-cell {
-  background: #FAFAFA;
-  border: 1px solid var(--border-subtle);
-  border-radius: 8px;
-  padding: 0.45rem 0.65rem;
-}
-
-.cell-label {
-  font-size: 0.68rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  display: block;
-  margin-bottom: 0.15rem;
-}
-
-.cell-input-box {
-  display: flex;
-  align-items: center;
-  gap: 0.2rem;
-}
-
-.currency-symbol {
-  font-size: 0.82rem;
-  color: var(--text-muted);
-  font-weight: 600;
-}
-
-.cell-input-box input {
-  width: 100%;
-  border: none;
-  background: transparent;
-  font-family: var(--font-mono);
-  font-size: 0.88rem;
-  font-weight: 700;
-  color: var(--text-main);
+.select-clean, .input-clean {
+  flex: 1;
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  padding: 0.45rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-light);
+  background: var(--bg-surface);
+  color: var(--text-title);
   outline: none;
 }
 
-/* 主操作按鈕 (極簡純黑按鈕) */
-.card-action-bar {
-  padding: 0.3rem 1rem 0.8rem;
+.input-clean {
+  font-family: var(--font-mono);
+  max-width: 100px;
 }
 
-.ig-main-btn {
-  width: 100%;
-  background: #18181B;
+.btn-solid {
+  background: var(--color-primary);
   color: #fff;
   border: none;
-  border-radius: 8px;
-  padding: 0.65rem;
-  font-family: var(--font-sans);
-  font-size: 0.85rem;
+  border-radius: 6px;
+  font-size: 0.78rem;
   font-weight: 600;
+  padding: 0.45rem 1rem;
   cursor: pointer;
-  transition: background 0.15s ease;
 }
 
-.ig-main-btn:hover {
-  background: #27272A;
+/* 右側展示面板 (Display Panel) */
+.display-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
 }
 
-/* 6 個月軌跡時間軸 */
-.timeline-tray {
+/* 頂部 5 大指標卡片 */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.8rem;
+}
+
+.metric-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+  padding: 0.9rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+.m-label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 0.25rem;
+}
+
+.m-val {
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-title);
+  margin-bottom: 0.6rem;
+}
+
+.m-bar-track {
+  height: 4px;
+  background: var(--border-subtle);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.m-bar-fill {
+  height: 100%;
+  background: #2563EB;
+  transition: width 0.3s ease;
+}
+
+.fill-amber { background: var(--color-amber); }
+.fill-emerald { background: var(--color-emerald); }
+.fill-dark { background: var(--text-title); }
+.fill-danger { background: var(--color-rose) !important; }
+
+/* 時間軸長條圖卡片 */
+.timeline-card, .table-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+  padding: 1.25rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+.card-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.2rem;
+}
+
+.card-top-row h3 {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text-title);
+}
+
+.timeline-hint {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+/* 6 個月軌跡長條圖 (Bars) */
+.timeline-bars {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  gap: 0.35rem;
-  padding: 0.3rem 1rem 0.8rem;
+  gap: 0.75rem;
 }
 
-.time-capsule {
-  background: #FAFAFA;
-  border: 1px solid var(--border-subtle);
+.bar-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.bar-value {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-title);
+}
+
+.bar-tube {
+  width: 100%;
+  height: 120px;
+  background: #F4F4F5;
   border-radius: 6px;
-  padding: 0.4rem 0.2rem;
-  text-align: center;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  position: relative;
 }
 
-.time-capsule.capsule-bankrupt {
-  border-color: rgba(239, 68, 68, 0.4);
-  background: #FEF2F2;
+.bar-fill-inner {
+  width: 100%;
+  background: #3B82F6;
+  transition: height 0.4s ease;
 }
 
-.cap-m {
-  font-size: 0.62rem;
-  color: var(--text-muted);
-  font-family: var(--font-mono);
-  font-weight: 600;
+.bar-fill-inner.deficit {
+  background: var(--color-rose);
 }
 
-.cap-cash {
-  font-family: var(--font-mono);
+.bar-month-tag {
   font-size: 0.7rem;
-  font-weight: 700;
-  margin: 0.1rem 0;
-  color: var(--text-main);
-}
-
-.cap-tag {
-  font-size: 0.6rem;
   font-weight: 600;
-  display: block;
+  color: var(--text-muted);
 }
 
-.tag-ok { color: #059669; }
-.tag-danger { color: #EF4444; }
-
-/* 貼文下方的 AI 留言 (Caption) */
-.post-caption {
-  padding: 0.75rem 1rem;
-  background: #FAFAFA;
-  border-top: 1px solid var(--border-light);
-  font-size: 0.8rem;
-  line-height: 1.5;
-}
-
-.caption-user {
+.bar-badge-pill {
+  font-size: 0.62rem;
   font-weight: 700;
-  color: var(--text-main);
-  margin-right: 0.35rem;
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
 }
 
-.caption-text {
-  color: #3F3F46;
+.pill-ok { color: var(--color-emerald); background: #ECFDF5; }
+.pill-fail { color: var(--color-rose); background: #FFF1F2; }
+
+/* 試算平衡表 */
+.balanced-badge {
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--color-emerald);
+  background: #ECFDF5;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
 }
 
-/* 簡約分類帳表格 */
-.clean-table-box {
-  padding: 0.4rem 1rem;
-}
-
-.clean-table {
+.data-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   font-family: var(--font-mono);
 }
 
-.clean-table th {
+.data-table th {
   text-align: left;
-  font-size: 0.68rem;
   font-family: var(--font-sans);
+  font-size: 0.72rem;
   color: var(--text-muted);
   font-weight: 600;
-  padding: 0.45rem 0.3rem;
+  padding: 0.6rem 0.5rem;
   border-bottom: 1px solid var(--border-light);
 }
 
-.clean-table td {
-  padding: 0.4rem 0.3rem;
-  border-bottom: 1px solid var(--border-light);
-  color: var(--text-main);
+.data-table td {
+  padding: 0.55rem 0.5rem;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-title);
 }
 
 .text-right { text-align: right; }
 
-.tfoot-row td {
+.total-row td {
   font-weight: 700;
-  border-top: 1px solid var(--border-subtle);
+  border-top: 2px solid var(--border-light);
   border-bottom: none;
-  padding-top: 0.5rem;
-  color: var(--text-main);
-}
-
-/* 快速注入區塊 */
-.quick-inject-box {
-  padding: 0.8rem 1rem;
-  background: #FAFAFA;
-  border-top: 1px solid var(--border-light);
-}
-
-.inject-title {
-  display: block;
-  font-size: 0.68rem;
-  font-weight: 700;
-  color: var(--text-muted);
-  margin-bottom: 0.45rem;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-}
-
-.inject-flex {
-  display: flex;
-  gap: 0.35rem;
-  flex-wrap: wrap;
-}
-
-.ig-select, .ig-input-num {
-  font-family: var(--font-sans);
-  font-size: 0.76rem;
-  padding: 0.35rem 0.5rem;
-  border-radius: 6px;
-  border: 1px solid var(--border-subtle);
-  background: #fff;
-  color: var(--text-main);
-  outline: none;
-}
-
-.ig-input-num {
-  font-family: var(--font-mono);
-  width: 85px;
-}
-
-.ig-sub-btn {
-  background: #18181B;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  font-size: 0.76rem;
-  font-weight: 600;
-  padding: 0.35rem 0.75rem;
-  cursor: pointer;
-}
-
-.ig-sub-btn:hover {
-  background: #27272A;
-}
-
-/* Footer */
-.ig-footer {
-  text-align: center;
-  font-size: 0.7rem;
-  color: var(--text-muted);
-  margin-top: 1.5rem;
+  padding-top: 0.75rem;
 }
