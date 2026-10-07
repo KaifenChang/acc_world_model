@@ -225,7 +225,7 @@ function renderTimelineBars(data) {
       </div>
       <span class="bar-month-tag">M${item.month}</span>
       <span class="bar-badge-pill ${item.bankrupt ? 'pill-fail' : 'pill-ok'}">
-        ${item.bankrupt ? '斷流' : '正常'}
+        ${item.bankrupt ? 'Deficit' : 'Solvent'}
       </span>
     `;
     timelineBarsContainer.appendChild(col);
@@ -258,7 +258,7 @@ function updateTrialBalanceTable(engine) {
     const row = document.createElement("tr");
     row.innerHTML = `
       <td><strong>${name}</strong></td>
-      <td style="color:#71717A">${POLARITIES[i] > 0 ? '+1 (借方增加)' : '-1 (貸方增加)'}</td>
+      <td style="color:#71717A">${POLARITIES[i] > 0 ? '+1 (Debit)' : '-1 (Credit)'}</td>
       <td class="text-right" style="color:#2563EB; font-weight:600;">${debitStr}</td>
       <td class="text-right" style="color:#D97706; font-weight:600;">${creditStr}</td>
     `;
@@ -272,18 +272,18 @@ function updateTrialBalanceTable(engine) {
 // AI 評估簡報
 function updateAIDiagnosis(bankruptMonth, timelineData, rev, exp) {
   if (bankruptMonth) {
-    aiStatusPill.textContent = "破產斷流";
+    aiStatusPill.textContent = "Deficit Warning";
     aiStatusPill.className = "pill-danger";
     aiText.innerHTML = `
-      在當前參數下，月度費用 ($${exp.toLocaleString()}) 超過月度收入 ($${rev.toLocaleString()})。<br/>
-      企業資產存量在 <strong>第 ${bankruptMonth} 個月</strong> 徹底穿底耗盡（資產赤字 ${formatMoney(timelineData[bankruptMonth-1].asset)}）。需提高收入或引入負債/權益注資。
+      月度 Expense ($${exp.toLocaleString()}) 超過月度 Revenue ($${rev.toLocaleString()})。<br/>
+      企業 Asset 在 <strong>第 ${bankruptMonth} 個月</strong> 穿底耗盡（Asset 赤字 ${formatMoney(timelineData[bankruptMonth-1].asset)}）。需提高 Revenue 或引入 Liability / Equity 注資。
     `;
   } else {
-    aiStatusPill.textContent = "運行健康";
+    aiStatusPill.textContent = "Solvent";
     aiStatusPill.className = "pill-safe";
     aiText.innerHTML = `
-      五大要素動態保持良性平衡。月度淨收益 (${formatMoney(rev - exp)}) 穩定轉化為權益積累。<br/>
-      預計第 6 個月資產存量可達 <strong>${formatMoney(timelineData[5].asset)}</strong>，借貸恒等式嚴格成立。
+      動態保持良性平衡。月度淨收益 (${formatMoney(rev - exp)}) 穩定轉化為 Equity 積累。<br/>
+      預計第 6 個月 Asset 可達 <strong>${formatMoney(timelineData[5].asset)}</strong>，借貸恒等式嚴格成立。
     `;
   }
 }
