@@ -122,37 +122,8 @@ body {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
 }
 
-/* 分段切換器 (Segmented Control) */
-.segmented-control {
-  display: flex;
-  background: var(--border-subtle);
-  padding: 3px;
-  border-radius: 8px;
-  margin-bottom: 1.2rem;
-}
-
-.seg-btn {
-  flex: 1;
-  border: none;
-  background: transparent;
-  padding: 0.45rem 0.5rem;
-  font-family: var(--font-sans);
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.seg-btn.active {
-  background: var(--bg-surface);
-  color: var(--text-title);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
-}
-
 .section-heading {
-  margin-bottom: 1rem;
+  margin-bottom: 1.1rem;
 }
 
 .section-heading h2 {
@@ -168,14 +139,55 @@ body {
 
 /* 滑動條控制項 (Slider Group) */
 .control-group {
-  margin-bottom: 1.1rem;
+  margin-bottom: 1.2rem;
 }
 
 .control-label-row {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 0.4rem;
+  align-items: center;
+  margin-bottom: 0.45rem;
+}
+
+.control-label-row label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-title);
+}
+
+.input-inline-box {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--border-subtle);
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  padding: 0.2rem 0.45rem;
+  transition: border-color 0.15s ease;
+}
+
+.input-inline-box:focus-within {
+  border-color: var(--text-title);
+  background: #fff;
+}
+
+.currency-prefix {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.num-input {
+  width: 90px;
+  border: none;
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-title);
+  outline: none;
+  text-align: right;
 }
 
 .control-label-row label {

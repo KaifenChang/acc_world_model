@@ -63,14 +63,11 @@ const rangeExpense = document.getElementById("range-expense");
 const rangeLiability = document.getElementById("range-liability");
 const rangeEquity = document.getElementById("range-equity");
 
-const dispRevenue = document.getElementById("disp-revenue");
-const dispExpense = document.getElementById("disp-expense");
-const dispLiability = document.getElementById("disp-liability");
-const dispEquity = document.getElementById("disp-equity");
+const inputRevenue = document.getElementById("input-revenue");
+const inputExpense = document.getElementById("input-expense");
+const inputLiability = document.getElementById("input-liability");
+const inputEquity = document.getElementById("input-equity");
 
-const btnPresetConservative = document.getElementById("btn-preset-conservative");
-const btnPresetAggressive = document.getElementById("btn-preset-aggressive");
-const btnPresetCrisis = document.getElementById("btn-preset-crisis");
 const btnReset = document.getElementById("btn-reset");
 
 const aiStatusPill = document.getElementById("ai-status-pill");
@@ -87,16 +84,10 @@ function formatMoney(amount) {
 
 // 即時推演運算
 function runLiveSimulation() {
-  const rev = parseFloat(rangeRevenue.value) || 0;
-  const exp = parseFloat(rangeExpense.value) || 0;
-  const liab = parseFloat(rangeLiability.value) || 0;
-  const eq = parseFloat(rangeEquity.value) || 0;
-
-  // 更新數值顯示
-  dispRevenue.textContent = formatMoney(rev);
-  dispExpense.textContent = formatMoney(exp);
-  dispLiability.textContent = formatMoney(liab);
-  dispEquity.textContent = formatMoney(eq);
+  const rev = parseFloat(inputRevenue.value) || 0;
+  const exp = parseFloat(inputExpense.value) || 0;
+  const liab = parseFloat(inputLiability.value) || 0;
+  const eq = parseFloat(inputEquity.value) || 0;
 
   // 初始化純五大要素沙盒
   const simEngine = new AccountingEngine(ACCOUNTS, POLARITIES, INITIAL_BALANCES);
@@ -288,48 +279,39 @@ function updateAIDiagnosis(bankruptMonth, timelineData, rev, exp) {
   }
 }
 
-// 滑動條事件綁定
-[rangeRevenue, rangeExpense, rangeLiability, rangeEquity].forEach(slider => {
-  slider.addEventListener("input", runLiveSimulation);
-});
-
-// 分段按鈕場景切換
-btnPresetConservative.addEventListener("click", () => {
-  setActiveSeg(btnPresetConservative);
-  rangeRevenue.value = 200000;
-  rangeExpense.value = 150000;
-  rangeLiability.value = 0;
-  rangeEquity.value = 0;
-  runLiveSimulation();
-});
-
-btnPresetAggressive.addEventListener("click", () => {
-  setActiveSeg(btnPresetAggressive);
-  rangeRevenue.value = 350000;
-  rangeExpense.value = 400000;
-  rangeLiability.value = 0;
-  rangeEquity.value = 0;
-  runLiveSimulation();
-});
-
-btnPresetCrisis.addEventListener("click", () => {
-  setActiveSeg(btnPresetCrisis);
-  rangeRevenue.value = 100000;
-  rangeExpense.value = 250000;
-  rangeLiability.value = 500000; // 靠負債續命
-  rangeEquity.value = 0;
-  runLiveSimulation();
-});
-
-function setActiveSeg(activeBtn) {
-  [btnPresetConservative, btnPresetAggressive, btnPresetCrisis].forEach(b => {
-    b.classList.remove("active");
+// 雙向綁定: 滑動條 (Slider) 與 數值輸入框 (Input)
+function bindTwoWay(slider, input) {
+  slider.addEventListener("input", () => {
+    input.value = slider.value;
+    runLiveSimulation();
   });
-  activeBtn.classList.add("active");
+  input.addEventListener("input", () => {
+    const val = parseFloat(input.value) || 0;
+    slider.value = val;
+    runLiveSimulation();
+  });
 }
 
+bindTwoWay(rangeRevenue, inputRevenue);
+bindTwoWay(rangeExpense, inputExpense);
+bindTwoWay(rangeLiability, inputLiability);
+bindTwoWay(rangeEquity, inputEquity);
+
+// 重設為預設狀態
 btnReset.addEventListener("click", () => {
-  btnPresetConservative.click();
+  inputRevenue.value = 200000;
+  rangeRevenue.value = 200000;
+  
+  inputExpense.value = 150000;
+  rangeExpense.value = 150000;
+  
+  inputLiability.value = 0;
+  rangeLiability.value = 0;
+  
+  inputEquity.value = 0;
+  rangeEquity.value = 0;
+  
+  runLiveSimulation();
 });
 
 // 手動分錄注入

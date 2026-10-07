@@ -30,47 +30,52 @@
     <!-- 左欄: 控制面板與參數滑桿 -->
     <aside class="control-panel">
       
-      <!-- 快速場景切換 -->
-      <div class="segmented-control">
-        <button id="btn-preset-conservative" class="seg-btn active">穩健獲利</button>
-        <button id="btn-preset-aggressive" class="seg-btn">大幅擴張</button>
-        <button id="btn-preset-crisis" class="seg-btn">負債融資</button>
-      </div>
-
       <div class="section-heading">
-        <h2>決策參數設定</h2>
-        <span class="heading-desc">滑動或輸入即可即時推演</span>
+        <h2>流動參數設定</h2>
+        <span class="heading-desc">可拉動滑桿，或直接輸入數字</span>
       </div>
 
-      <!-- 4 組滑動條 (對應五大要素流動) -->
+      <!-- 4 組滑動條 + 直接數字輸入框 (雙向聯動) -->
       <div class="control-group">
         <div class="control-label-row">
-          <label for="range-revenue">Revenue</label>
-          <span class="val-display" id="disp-revenue">$200,000</span>
+          <label for="input-revenue">Revenue</label>
+          <div class="input-inline-box">
+            <span class="currency-prefix">$</span>
+            <input type="number" id="input-revenue" class="num-input" value="200000" step="10000" min="0">
+          </div>
         </div>
         <input type="range" id="range-revenue" min="0" max="600000" step="10000" value="200000" class="slider">
       </div>
 
       <div class="control-group">
         <div class="control-label-row">
-          <label for="range-expense">Expense</label>
-          <span class="val-display" id="disp-expense">$150,000</span>
+          <label for="input-expense">Expense</label>
+          <div class="input-inline-box">
+            <span class="currency-prefix">$</span>
+            <input type="number" id="input-expense" class="num-input" value="150000" step="10000" min="0">
+          </div>
         </div>
         <input type="range" id="range-expense" min="0" max="500000" step="10000" value="150000" class="slider">
       </div>
 
       <div class="control-group">
         <div class="control-label-row">
-          <label for="range-liability">Liability</label>
-          <span class="val-display" id="disp-liability">$0</span>
+          <label for="input-liability">Liability</label>
+          <div class="input-inline-box">
+            <span class="currency-prefix">$</span>
+            <input type="number" id="input-liability" class="num-input" value="0" step="50000" min="0">
+          </div>
         </div>
         <input type="range" id="range-liability" min="0" max="1000000" step="50000" value="0" class="slider">
       </div>
 
       <div class="control-group">
         <div class="control-label-row">
-          <label for="range-equity">Equity</label>
-          <span class="val-display" id="disp-equity">$0</span>
+          <label for="input-equity">Equity</label>
+          <div class="input-inline-box">
+            <span class="currency-prefix">$</span>
+            <input type="number" id="input-equity" class="num-input" value="0" step="50000" min="0">
+          </div>
         </div>
         <input type="range" id="range-equity" min="0" max="1000000" step="50000" value="0" class="slider">
       </div>
