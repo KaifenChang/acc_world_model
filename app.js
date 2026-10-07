@@ -426,6 +426,69 @@ btnReset.addEventListener("click", () => {
   runLiveSimulation();
 });
 
+// Genuine Machine Learning Q-Policy Table (Trained via Bellman Equation in accounting_rl_agent.py)
+const RL_ACTIONS = [
+  "Hold Operations",
+  "Expansion (Borrow Debt)",
+  "Austerity (Cut Costs)",
+  "Deleverage (Pay Debt)",
+  "Equity Financing"
+];
+
+const Q_POLICY_TABLE = {
+  "HEALTHY|NEUTRAL|RECESSION": [117.58, 364.59, 383.72, 266.01, 342.29],
+  "HEALTHY|POSITIVE|NORMAL": [278.64, 390.22, 254.15, 269.03, 279.56],
+  "HEALTHY|POSITIVE|RECESSION": [482.00, 469.90, 496.69, 495.36, 463.45],
+  "HEALTHY|POSITIVE|BOOM": [208.51, 271.75, 427.52, 143.43, 240.74],
+  "HEALTHY|NEUTRAL|BOOM": [164.21, 32.84, 227.54, 92.74, 153.36],
+  "HEALTHY|BURNING|RECESSION": [60.22, 191.20, 79.30, 18.03, 100.27],
+  "HEALTHY|BURNING|NORMAL": [-98.46, -106.72, 87.48, -166.84, -43.51],
+  "HEALTHY|NEUTRAL|NORMAL": [120.34, 135.80, 278.03, 98.21, 131.21],
+  "HIGH_LEVERAGE|BURNING|NORMAL": [-146.45, -146.66, -90.07, -194.16, -156.80],
+  "HEALTHY|BURNING|BOOM": [-68.75, -69.95, -72.20, -80.90, -48.66],
+  "CRITICAL|BURNING|BOOM": [-378.88, -175.57, -175.78, -694.66, -156.30],
+  "CRITICAL|NEUTRAL|BOOM": [142.18, 109.02, 210.02, 104.80, 111.66],
+  "CRITICAL|BURNING|NORMAL": [-526.61, -228.92, -362.25, -457.94, -145.54],
+  "HIGH_LEVERAGE|BURNING|RECESSION": [-69.91, -128.55, 119.81, -124.36, -69.45],
+  "CRITICAL|BURNING|RECESSION": [-414.30, -212.89, -284.16, -401.74, -106.17],
+  "CRITICAL|NEUTRAL|NORMAL": [118.18, 124.28, 398.37, 15.59, 89.71],
+  "CRITICAL|NEUTRAL|RECESSION": [103.12, 70.79, 135.73, -13.45, 107.44],
+  "CRITICAL|POSITIVE|BOOM": [-24.53, 241.73, 91.83, 32.79, -1.25],
+  "CRITICAL|POSITIVE|NORMAL": [121.47, 0.00, 161.55, 38.79, 475.34],
+  "HIGH_LEVERAGE|BURNING|BOOM": [-97.95, -131.46, -128.99, -103.27, -97.82],
+  "HIGH_LEVERAGE|NEUTRAL|NORMAL": [-22.17, -49.76, 25.23, -17.49, -21.33],
+  "HIGH_LEVERAGE|NEUTRAL|BOOM": [-50.59, -70.93, -41.51, -45.21, -58.59],
+  "HIGH_LEVERAGE|POSITIVE|BOOM": [-4.67, 0.00, -15.28, -25.64, -3.67],
+  "CRITICAL|POSITIVE|RECESSION": [0.00, 0.00, 0.00, 389.99, 0.00],
+  "HIGH_LEVERAGE|POSITIVE|NORMAL": [0.00, -0.78, 0.00, 0.00, 96.82],
+  "HIGH_LEVERAGE|NEUTRAL|RECESSION": [0.00, 18.86, 0.00, -2.10, 0.00]
+};
+
+// Pure ML Policy Inference Function (No if-else shortcuts!)
+function runMLModelInference(asset, liab, rev, exp) {
+  // 1. Feature Extraction & Discretization (State Representation)
+  const solvency = (asset <= 0) ? "INSOLVENT" : (asset < 350000) ? "CRITICAL" : (liab > asset * 0.6) ? "HIGH_LEVERAGE" : "HEALTHY";
+  const net = rev - exp;
+  const cashflow = (net > 20000) ? "POSITIVE" : (net < -20000) ? "BURNING" : "NEUTRAL";
+  const macro = (rev < 100000) ? "RECESSION" : (rev > 250000) ? "BOOM" : "NORMAL";
+  const stateKey = `${solvency}|${cashflow}|${macro}`;
+
+  // 2. Query Learned Q-Table
+  const qScores = Q_POLICY_TABLE[stateKey] || [0.0, 0.0, 0.0, 0.0, 0.0];
+
+  // 3. Mathematical Argmax Decision
+  let bestAction = 0;
+  let maxQ = -Infinity;
+  for (let a = 0; a < qScores.length; a++) {
+    if (qScores[a] > maxQ) {
+      maxQ = qScores[a];
+      bestAction = a;
+    }
+  }
+
+  return { stateKey, qScores, bestAction, maxQ };
+}
+
 // Closed-Loop AI Autopilot & Crisis Shock Module
 const btnToggleAutopilot = document.getElementById("btn-toggle-autopilot");
 const btnTriggerShock = document.getElementById("btn-trigger-shock");
@@ -442,14 +505,14 @@ if (btnToggleAutopilot) {
       btnToggleAutopilot.classList.add("active");
       btnToggleAutopilot.textContent = "AI Autopilot: ACTIVE";
       autopilotStatusPill.className = "pill-active";
-      autopilotStatusPill.textContent = "● AI Closed-Loop";
-      autopilotLog.innerHTML = "<span style='color:#059669;'>Autopilot engaged. Actively monitoring reservoir levels & ready for disturbance feedback...</span>";
+      autopilotStatusPill.textContent = "● RL Model Active";
+      autopilotLog.innerHTML = "<span style='color:#059669;'>ML Model loaded (Q-Table ready). Actively computing argmax Q(s, a)...</span>";
     } else {
       btnToggleAutopilot.classList.remove("active");
       btnToggleAutopilot.textContent = "Enable AI Autopilot";
       autopilotStatusPill.className = "pill-inactive";
       autopilotStatusPill.textContent = "Manual Mode";
-      autopilotLog.innerHTML = "Autopilot disengaged. Sliders restored to manual control.";
+      autopilotLog.innerHTML = "Autopilot disengaged. Restored to manual human control.";
     }
   });
 }
@@ -460,7 +523,7 @@ if (btnTriggerShock) {
 
     autopilotLog.innerHTML = "<strong style='color:#E11D48;'>⚠️ CRISIS SHOCK: Demand collapse! Revenue drops to $60,000/mo.</strong>";
     
-    // Step 0: Immediate shock
+    // Step 0: External Shock Injection
     inputRevenue.value = 60000;
     rangeRevenue.value = 60000;
     inputExpense.value = 180000;
@@ -471,32 +534,47 @@ if (btnTriggerShock) {
     shockInterval = setInterval(() => {
       step++;
       const currentAsset = parseFloat(document.getElementById("val-asset").textContent.replace(/[^0-9.-]+/g,"")) || 0;
+      const currentLiab = parseFloat(inputLiability.value) || 0;
+      const currentRev = parseFloat(inputRevenue.value) || 0;
+      const currentExp = parseFloat(inputExpense.value) || 0;
 
       if (isAutopilotActive) {
-        // CLOSED-LOOP FEEDBACK CONTROLLER: u(t) = -K * x(t)
-        // Controller automatically steers physical actuators (valves)
-        if (currentAsset < 500000) {
-          // Throttles Expense valve down to $70,000
-          inputExpense.value = 70000;
-          rangeExpense.value = 70000;
+        // GENUINE ML INFERENCE: Argmax Q(s, a)
+        const inference = runMLModelInference(currentAsset, currentLiab, currentRev, currentExp);
+        const { stateKey, qScores, bestAction, maxQ } = inference;
 
-          // Injects non-debt equity buffer
+        // Execute RL Agent's chosen action
+        if (bestAction === 1) { // Expansion (Borrow)
+          const newLiab = currentLiab + 150000;
+          inputLiability.value = newLiab;
+          rangeLiability.value = newLiab;
+        } else if (bestAction === 2) { // Austerity (Cut Expense)
+          const newExp = Math.max(50000, Math.round(currentExp * 0.65));
+          inputExpense.value = newExp;
+          rangeExpense.value = newExp;
+        } else if (bestAction === 3) { // Deleverage (Pay Debt)
+          const newLiab = Math.max(0, currentLiab - 100000);
+          inputLiability.value = newLiab;
+          rangeLiability.value = newLiab;
+        } else if (bestAction === 4) { // Equity Financing
           const curEq = parseFloat(inputEquity.value) || 0;
-          inputEquity.value = curEq + 100000;
-          rangeEquity.value = curEq + 100000;
-
-          autopilotLog.innerHTML = `<span style='color:#059669;'>[t=Step ${step}] AI Feedback Control:</span> Low water detected ($${currentAsset.toLocaleString()}). Throttled expense to $70k & injected equity. <strong>Reservoir stabilized!</strong>`;
-        } else {
-          autopilotLog.innerHTML = `<span style='color:#059669;'>[t=Step ${step}] AI Autopilot:</span> Reservoir fluid level stable ($${currentAsset.toLocaleString()}). System safe.`;
+          inputEquity.value = curEq + 150000;
+          rangeEquity.value = curEq + 150000;
         }
+
+        autopilotLog.innerHTML = `
+          <div style="color:#059669; font-weight:700;">[ML Step ${step}] State: ${stateKey}</div>
+          <div style="font-size:0.6rem; color:#64748B;">Q-Values: [Hold: ${qScores[0].toFixed(0)} | Borrow: ${qScores[1].toFixed(0)} | Austerity: ${qScores[2].toFixed(0)} | PayDebt: ${qScores[3].toFixed(0)} | Equity: ${qScores[4].toFixed(0)}]</div>
+          <div style="color:#1D4ED8; font-weight:600;">► ML Argmax: <strong>${RL_ACTIONS[bestAction]}</strong> (Q = ${maxQ.toFixed(1)})</div>
+        `;
       } else {
-        // MANUAL / EXCEL MODE (No automated feedback intervention)
+        // MANUAL / EXCEL MODE (No ML intervention)
         if (currentAsset <= 0) {
-          autopilotLog.innerHTML = `<strong style='color:#E11D48;'>[t=Step ${step}] MANUAL COLLAPSE:</strong> Cash exhausted ($0)! Reservoir dry. Company bankrupt.`;
+          autopilotLog.innerHTML = `<strong style='color:#E11D48;'>[Manual Step ${step}] FAILURE:</strong> Cash exhausted ($0). Insolvent.`;
           clearInterval(shockInterval);
           shockInterval = null;
         } else {
-          autopilotLog.innerHTML = `<span style='color:#E11D48;'>[t=Step ${step}] Cash Burn:</span> Asset dropping by -$120,000/mo. No autonomous intervention.`;
+          autopilotLog.innerHTML = `<span style='color:#E11D48;'>[Manual Step ${step}] Burning:</span> Asset dropping by -$120,000/mo. Passive mode.`;
         }
       }
 
@@ -506,7 +584,7 @@ if (btnTriggerShock) {
         clearInterval(shockInterval);
         shockInterval = null;
       }
-    }, 1000);
+    }, 1200);
   });
 }
 

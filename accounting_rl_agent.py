@@ -29,7 +29,18 @@ class AccountingWorldModelEnv:
         self.init_equity = initial_equity
         self.reset()
 
-    def reset(self):
+    def reset(self, randomize: bool = False):
+        if randomize:
+            self.init_asset = float(random.choice([150_000, 350_000, 600_000, 1_000_000]))
+            self.init_equity = self.init_asset
+            self.baseline_revenue = float(random.choice([80_000, 140_000, 200_000, 300_000]))
+            self.baseline_expense = float(random.choice([120_000, 160_000, 220_000]))
+            self.macro_state = random.choice([0, 1, 2])
+        else:
+            self.baseline_revenue = 200_000.0
+            self.baseline_expense = 150_000.0
+            self.macro_state = 1
+
         # Initial balances [Asset, Liability, Equity, Revenue, Expense]
         self.balances = {
             "Asset": self.init_asset,
@@ -39,10 +50,6 @@ class AccountingWorldModelEnv:
             "Expense": 0.0
         }
         self.month = 0
-        self.baseline_revenue = 200_000.0
-        self.baseline_expense = 150_000.0
-        # Macro-economic climate: 0: Recession (-30% sales), 1: Normal, 2: Boom (+30% sales)
-        self.macro_state = 1
         return self._get_state()
 
     def _get_state(self) -> str:
@@ -228,16 +235,16 @@ class QLearningCFOAgent:
 # 3. Training & Evaluation Pipeline
 # =====================================================================
 
-def train_cfo_agent(episodes: int = 1500) -> Tuple[QLearningCFOAgent, List[float]]:
-    env = AccountingWorldModelEnv(initial_asset=800_000, initial_equity=800_000)
-    agent = QLearningCFOAgent()
+def train_cfo_agent(episodes: int = 3000) -> Tuple[QLearningCFOAgent, List[float]]:
+    env = AccountingWorldModelEnv(initial_asset=500_000, initial_equity=500_000)
+    agent = QLearningCFOAgent(alpha=0.15, gamma=0.92, epsilon=1.0, epsilon_decay=0.998)
 
     print(f"[*] Training Reinforcement Learning CFO Agent on Accounting World Model ({episodes} episodes)...")
     
     bankruptcy_history = []
     
     for ep in range(1, episodes + 1):
-        state = env.reset()
+        state = env.reset(randomize=True)
         done = False
         episode_reward = 0.0
 
