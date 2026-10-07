@@ -79,7 +79,10 @@ const totalDebitEl = document.getElementById("total-debit");
 const totalCreditEl = document.getElementById("total-credit");
 
 function formatMoney(amount) {
-  return "$" + Math.round(amount).toLocaleString();
+  if (Math.abs(amount) < 0.01) return "$0";
+  const rounded = Math.round(amount);
+  if (rounded === 0 || Object.is(rounded, -0)) return "$0";
+  return "$" + rounded.toLocaleString();
 }
 
 // 即時推演運算
@@ -89,18 +92,43 @@ function runLiveSimulation() {
   const liab = parseFloat(inputLiability.value) || 0;
   const eq = parseFloat(inputEquity.value) || 0;
 
-  // 初始化純五大要素沙盒
-  const simEngine = new AccountingEngine(ACCOUNTS, POLARITIES, INITIAL_BALANCES);
+  // 1. 當期快照引擎 (用於 5 大要素卡片與未結轉試算平衡表 Trial Balance)
+  const currentEngine = new AccountingEngine(ACCOUNTS, POLARITIES, [1000000, 0, 1000000, 0, 0]);
 
-  // 首月負債融資動作: 借 Asset (+), 貸 Liability (+)
+  if (liab > 0) {
+    const b = [0, 0, 0, 0, 0];
+    b[currentEngine.accMap["Asset"]] = +1.0;
+    b[currentEngine.accMap["Liability"]] = -1.0;
+    currentEngine.applyTransaction(b, liab);
+  }
+  if (eq > 0) {
+    const b = [0, 0, 0, 0, 0];
+    b[currentEngine.accMap["Asset"]] = +1.0;
+    b[currentEngine.accMap["Equity"]] = -1.0;
+    currentEngine.applyTransaction(b, eq);
+  }
+  if (rev > 0) {
+    const b = [0, 0, 0, 0, 0];
+    b[currentEngine.accMap["Asset"]] = +1.0;
+    b[currentEngine.accMap["Revenue"]] = -1.0;
+    currentEngine.applyTransaction(b, rev);
+  }
+  if (exp > 0) {
+    const b = [0, 0, 0, 0, 0];
+    b[currentEngine.accMap["Expense"]] = +1.0;
+    b[currentEngine.accMap["Asset"]] = -1.0;
+    currentEngine.applyTransaction(b, exp);
+  }
+
+  // 2. 6 個月動態演化引擎 (每月定期結轉損益至權益池)
+  const simEngine = new AccountingEngine(ACCOUNTS, POLARITIES, [1000000, 0, 1000000, 0, 0]);
+
   if (liab > 0) {
     const b = [0, 0, 0, 0, 0];
     b[simEngine.accMap["Asset"]] = +1.0;
     b[simEngine.accMap["Liability"]] = -1.0;
     simEngine.applyTransaction(b, liab);
   }
-
-  // 首月權益增資動作: 借 Asset (+), 貸 Equity (+)
   if (eq > 0) {
     const b = [0, 0, 0, 0, 0];
     b[simEngine.accMap["Asset"]] = +1.0;
@@ -108,12 +136,13 @@ function runLiveSimulation() {
     simEngine.applyTransaction(b, eq);
   }
 
+  const initialStartingAsset = simEngine.getBalance("Asset");
   const timelineData = [];
   let bankruptMonth = null;
 
   // 推進 6 個月
   for (let m = 1; m <= 6; m++) {
-    // 1. 營收流動: 借 Asset (+), 貸 Revenue (+)
+    // 營收流動: 借 Asset (+), 貸 Revenue (+)
     if (rev > 0) {
       const b = [0, 0, 0, 0, 0];
       b[simEngine.accMap["Asset"]] = +1.0;
@@ -121,7 +150,7 @@ function runLiveSimulation() {
       simEngine.applyTransaction(b, rev);
     }
 
-    // 2. 費用流動: 借 Expense (+), 貸 Asset (-)
+    // 費用流動: 借 Expense (+), 貸 Asset (-)
     if (exp > 0) {
       const b = [0, 0, 0, 0, 0];
       b[simEngine.accMap["Expense"]] = +1.0;
@@ -129,7 +158,7 @@ function runLiveSimulation() {
       simEngine.applyTransaction(b, exp);
     }
 
-    // 3. 期末結轉 C: 清空 Revenue / Expense，全數匯入 Equity
+    // 期末結轉 C: 清空當月 Revenue / Expense，全數匯入 Equity
     simEngine.closePeriod(["Revenue", "Expense"], "Equity");
 
     const curAsset = simEngine.getBalance("Asset");
@@ -146,24 +175,24 @@ function runLiveSimulation() {
     });
   }
 
-  // 1. 刷新頂部五大要素卡片
-  updateMetricsCards(simEngine);
+  // 1. 刷新頂部五大要素卡片 (使用 currentEngine 呈現活躍的當期流量與存量)
+  updateMetricsCards(currentEngine);
 
   // 1.5 刷新標準會計財務比率
-  updateFinancialRatios(simEngine, rev, exp, startingAsset);
+  updateFinancialRatios(currentEngine, rev, exp, initialStartingAsset);
 
   // 2. 刷新 6 個月軌跡圖
   renderTimelineBars(timelineData, rev, exp);
 
-  // 3. 刷新五大要素試算表
-  updateTrialBalanceTable(simEngine);
+  // 3. 刷新五大要素試算表 (呈現 DEALER 借貸平衡 1ᵀ z = 0)
+  updateTrialBalanceTable(currentEngine);
 
   // 4. 刷新 AI 評估簡報
   updateAIDiagnosis(bankruptMonth, timelineData, rev, exp);
 }
 
 // 刷新標準會計財務比率與恆等式
-function updateFinancialRatios(engine, rev, exp, startingAsset) {
+function updateFinancialRatios(engine, rev, exp, initialStartingAsset) {
   const asset = engine.getBalance("Asset");
   const liability = engine.getBalance("Liability");
   const equity = engine.getBalance("Equity");
@@ -208,7 +237,7 @@ function updateFinancialRatios(engine, rev, exp, startingAsset) {
     runwaySubEl.textContent = "Positive Cash Flow";
   } else {
     const burn = Math.abs(netFlow);
-    const months = startingAsset > 0 ? (startingAsset / burn).toFixed(1) : "0.0";
+    const months = initialStartingAsset > 0 ? (initialStartingAsset / burn).toFixed(1) : "0.0";
     runwayEl.textContent = `${months} Months`;
     runwayEl.style.color = "#E11D48";
     runwaySubEl.textContent = `Depletion at $${burn.toLocaleString()}/mo`;
@@ -216,7 +245,7 @@ function updateFinancialRatios(engine, rev, exp, startingAsset) {
 
   // 4. Identity verification badge
   const identityBadge = document.getElementById("identity-badge");
-  identityBadge.textContent = `${formatMoney(asset)} = ${formatMoney(liability)} + ${formatMoney(equity)}`;
+  identityBadge.textContent = `Asset (${formatMoney(asset)}) = Liab (${formatMoney(liability)}) + Eq (${formatMoney(equity + netFlow)})`;
 }
 
 // 刷新五大要素指標卡片
@@ -300,14 +329,20 @@ function updateTrialBalanceTable(engine) {
     let debitStr = "-";
     let creditStr = "-";
 
-    if (zVal > 0) {
-      debitStr = formatMoney(val);
-      totalDebit += val;
-    } else if (zVal < 0) {
-      creditStr = formatMoney(val);
-      totalCredit += val;
+    if (val > 0) {
+      if (POLARITIES[i] > 0) {
+        debitStr = formatMoney(val);
+        totalDebit += val;
+      } else {
+        creditStr = formatMoney(val);
+        totalCredit += val;
+      }
     } else {
-      debitStr = "$0";
+      if (POLARITIES[i] > 0) {
+        debitStr = "$0";
+      } else {
+        creditStr = "$0";
+      }
     }
 
     const row = document.createElement("tr");
