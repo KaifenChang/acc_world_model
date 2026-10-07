@@ -217,15 +217,15 @@ function runSimulation() {
   updateTanksUI(simEngine);
   updateTrialBalanceTable(simEngine);
 
-  // 簡約 IG 貼文評論風格 AI 總結
+  // 簡約文字風格 AI 總結
   if (bankruptMonth) {
     aiConclusionText.innerHTML = `
-      <strong style="color:#ED4956;">⚠️ 現金流斷流預警：</strong>
-      在當前參數下，企業在 <strong>第 ${bankruptMonth} 個月</strong> 現金將徹底穿底（餘額 ${formatMoney(timelineData[bankruptMonth-1].cash)}）。前期投資過重，需延後採購或融資 ${formatMoney(Math.abs(timelineData[bankruptMonth-1].cash) + 50000)}。
+      <strong style="color:#EF4444;">[斷流預警]</strong>
+      在當前參數下，企業在 <strong>第 ${bankruptMonth} 個月</strong> 現金將徹底穿底（餘額 ${formatMoney(timelineData[bankruptMonth-1].cash)}）。前期投資過重，需延後採購或補足融資 ${formatMoney(Math.abs(timelineData[bankruptMonth-1].cash) + 50000)}。
     `;
   } else {
     aiConclusionText.innerHTML = `
-      <strong style="color:#10B981;">✅ 財務健康度極佳：</strong>
+      <strong style="color:#10B981;">[運行健康]</strong>
       此策略在 6 個月推演期間平穩運行。期末現金存量累積達 <strong>${formatMoney(timelineData[5].cash)}</strong>，累計利潤 <strong>${formatMoney(timelineData[5].profit)}</strong>。
     `;
   }

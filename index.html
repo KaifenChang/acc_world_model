@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>FlowLedger | 會計水流世界模型</title>
-  <meta name="description" content="簡約 IG 風格的會計物理引擎與 AI 商業推演工具">
+  <meta name="description" content="簡約風格的會計物理引擎與 AI 商業推演工具">
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,69 +18,68 @@
     <div class="nav-inner">
       <div class="nav-brand">
         <span class="brand-text">FlowLedger</span>
-        <span class="ig-dot"></span>
       </div>
       <div id="conservation-badge" class="ig-badge">
         <span class="ig-badge-dot"></span>
-        <span id="badge-text">1ᵀ z = 0 平衡守恆</span>
+        <span id="badge-text">1ᵀ z = 0 守恆</span>
       </div>
     </div>
   </header>
 
   <main class="feed-container">
     
-    <!-- 1. IG 限時動態風格水箱 (Stories Style Tank Bar) -->
+    <!-- 1. 簡約科目存量水箱列 (Clean Stories Bar) -->
     <section class="stories-section">
       <div class="stories-header">
-        <span class="section-label">科目水箱存量 (Accounts State)</span>
+        <span class="section-label">科目狀態 (Accounts State)</span>
         <span class="live-pill">LIVE</span>
       </div>
       <div class="stories-scroll">
-        <!-- 現金水箱 -->
+        <!-- 現金 -->
         <div class="story-item" id="story-cash">
           <div class="story-ring active-ring">
             <div class="story-avatar">
-              <span class="avatar-icon">💧</span>
+              <span class="avatar-code">CSH</span>
               <div id="ring-fill-cash" class="avatar-fill" style="height: 65%;"></div>
             </div>
           </div>
-          <span class="story-title">現金 Cash</span>
+          <span class="story-title">現金</span>
           <span class="story-val" id="tank-val-cash">$1,000,000</span>
         </div>
 
-        <!-- 設備資產 -->
+        <!-- 設備 -->
         <div class="story-item" id="story-equipment">
           <div class="story-ring">
             <div class="story-avatar">
-              <span class="avatar-icon">🏭</span>
+              <span class="avatar-code">EQP</span>
               <div id="ring-fill-equipment" class="avatar-fill" style="height: 0%;"></div>
             </div>
           </div>
-          <span class="story-title">設備 Equip</span>
+          <span class="story-title">設備</span>
           <span class="story-val" id="tank-val-equipment">$0</span>
         </div>
 
-        <!-- 銀行負債 -->
+        <!-- 貸款 -->
         <div class="story-item" id="story-loan">
           <div class="story-ring">
             <div class="story-avatar">
-              <span class="avatar-icon">🏦</span>
+              <span class="avatar-code">LON</span>
               <div id="ring-fill-loan" class="avatar-fill fill-amber" style="height: 0%;"></div>
             </div>
           </div>
-          <span class="story-title">貸款 Loan</span>
+          <span class="story-title">貸款</span>
           <span class="story-val" id="tank-val-loan">$0</span>
         </div>
 
-        <!-- 實收股本 -->
+        <!-- 股本 -->
         <div class="story-item" id="story-equity">
           <div class="story-ring">
             <div class="story-avatar">
-              <span class="avatar-icon">🏛️</span>
+              <span class="avatar-code">STK</span>
               <div id="ring-fill-equity" class="avatar-fill fill-purple" style="height: 65%;"></div>
             </div>
           </div>
-          <span class="story-title">股本 Stock</span>
+          <span class="story-title">股本</span>
           <span class="story-val" id="tank-val-equity">$1,000,000</span>
         </div>
 
@@ -88,24 +87,24 @@
         <div class="story-item" id="story-retained">
           <div class="story-ring">
             <div class="story-avatar">
-              <span class="avatar-icon">💎</span>
+              <span class="avatar-code">RET</span>
               <div id="ring-fill-retained" class="avatar-fill fill-emerald" style="height: 5%;"></div>
             </div>
           </div>
-          <span class="story-title">利潤 Profit</span>
+          <span class="story-title">利潤</span>
           <span class="story-val" id="tank-val-retained">$0</span>
         </div>
       </div>
     </section>
 
-    <!-- 2. IG 貼文風格卡片: AI 商業推演控制器 (Post Card 1) -->
+    <!-- 2. AI 商業推演卡片 -->
     <article class="ig-card">
       <div class="card-user-header">
         <div class="user-info">
-          <div class="user-avatar-gradient">✨</div>
+          <div class="user-avatar-monogram">WM</div>
           <div>
-            <div class="username">cfo.worldmodel <span class="verified-badge">✓</span></div>
-            <div class="user-meta">AI 商業決策推演引擎 • 6 個月前瞻</div>
+            <div class="username">cfo.worldmodel</div>
+            <div class="user-meta">AI 決策沙盒推演 • 6 個月前瞻</div>
           </div>
         </div>
       </div>
@@ -166,7 +165,7 @@
         <!-- JS 動態生成 -->
       </div>
 
-      <!-- IG 貼文下方的 AI 留言/診斷分析 (Caption) -->
+      <!-- AI 診斷分析 (Caption) -->
       <div class="post-caption">
         <span class="caption-user">cfo.worldmodel</span>
         <span id="ai-conclusion-text" class="caption-text">
@@ -175,11 +174,11 @@
       </div>
     </article>
 
-    <!-- 3. IG 貼文風格卡片: 試算平衡與手動記帳 (Post Card 2) -->
+    <!-- 3. 試算平衡與手動記帳 -->
     <article class="ig-card">
       <div class="card-user-header">
         <div class="user-info">
-          <div class="user-avatar-gradient avatar-ledger">⚖️</div>
+          <div class="user-avatar-monogram avatar-ledger">TB</div>
           <div>
             <div class="username">trial.balance</div>
             <div class="user-meta">基爾霍夫守恆 • 實時分類帳</div>
@@ -193,10 +192,10 @@
         <table class="clean-table">
           <thead>
             <tr>
-              <th>科目 Account</th>
+              <th>科目</th>
               <th>方向</th>
-              <th class="text-right">借方 Debit</th>
-              <th class="text-right">貸方 Credit</th>
+              <th class="text-right">借方</th>
+              <th class="text-right">貸方</th>
             </tr>
           </thead>
           <tbody id="tb-body">
@@ -204,7 +203,7 @@
           </tbody>
           <tfoot>
             <tr class="tfoot-row">
-              <td colspan="2">合計 Balance</td>
+              <td colspan="2">合計</td>
               <td id="total-debit" class="text-right">$0</td>
               <td id="total-credit" class="text-right">$0</td>
             </tr>
@@ -217,16 +216,16 @@
         <span class="inject-title">手動注入單筆流體事件</span>
         <div class="inject-flex">
           <select id="select-debit" class="ig-select">
-            <option value="Cash">借: 現金 Cash (+)</option>
-            <option value="Equipment">借: 設備 Equip (+)</option>
-            <option value="Operating Expense">借: 費用 Exp (+)</option>
-            <option value="Bank Loan">借: 還款 Loan (-)</option>
+            <option value="Cash">借方: 現金</option>
+            <option value="Equipment">借方: 設備</option>
+            <option value="Operating Expense">借方: 費用</option>
+            <option value="Bank Loan">借方: 還款</option>
           </select>
           <select id="select-credit" class="ig-select">
-            <option value="Sales Revenue">貸: 營收 Rev (+)</option>
-            <option value="Common Stock">貸: 股本 Stock (+)</option>
-            <option value="Cash">貸: 現金付款 Cash (-)</option>
-            <option value="Bank Loan">貸: 借款 Loan (+)</option>
+            <option value="Sales Revenue">貸方: 營收</option>
+            <option value="Common Stock">貸方: 股本</option>
+            <option value="Cash">貸方: 現金</option>
+            <option value="Bank Loan">貸方: 借款</option>
           </select>
           <input type="number" id="manual-amount" class="ig-input-num" value="50000" step="10000">
           <button id="btn-inject-tx" class="ig-sub-btn">記帳</button>
