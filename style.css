@@ -337,13 +337,6 @@ body {
   border-radius: 4px;
 }
 
-.bar-delta {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  font-weight: 600;
-}
-.delta-pos { color: var(--color-emerald); }
-.delta-neg { color: var(--color-rose); }
 
 /* 時間軸長條圖卡片 */
 .timeline-card, .table-card {

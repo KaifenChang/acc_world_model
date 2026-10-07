@@ -179,7 +179,7 @@ function runLiveSimulation() {
   updateFinancialRatios(currentEngine, rev, exp, initialStartingAsset);
 
   // 2. 刷新 6 個月軌跡圖
-  renderTimelineBars(timelineData, rev, exp);
+  renderTimelineBars(timelineData);
 
   // 3. 刷新五大要素試算表 (呈現 DEALER 借貸平衡 1ᵀ z = 0)
   updateTrialBalanceTable(currentEngine);
@@ -281,10 +281,9 @@ function updateMetricsCards(engine) {
 }
 
 // 刷新 6 個月資產存量長條圖
-function renderTimelineBars(data, rev, exp) {
+function renderTimelineBars(data) {
   timelineBarsContainer.innerHTML = "";
   const maxAsset = Math.max(1, ...data.map(d => Math.abs(d.asset)));
-  const netFlow = rev - exp;
 
   data.forEach(item => {
     const heightPct = Math.max(8, Math.min(100, (Math.abs(item.asset) / Math.max(maxAsset, 1500000)) * 100));
@@ -295,13 +294,10 @@ function renderTimelineBars(data, rev, exp) {
       <span class="bar-value" style="color:${item.bankrupt ? '#E11D48' : '#09090B'}">
         ${formatMoney(item.asset)}
       </span>
-      <span class="bar-delta ${netFlow >= 0 ? 'delta-pos' : 'delta-neg'}">
-        ${netFlow >= 0 ? '+' : '-'}${formatMoney(Math.abs(netFlow))}
-      </span>
       <div class="bar-tube">
         <div class="bar-fill-inner ${item.bankrupt ? 'deficit' : ''}" style="height:${heightPct}%;"></div>
       </div>
-      <span class="bar-month-tag">Month ${item.month}</span>
+      <span class="bar-month-tag">M${item.month}</span>
       <span class="bar-badge-pill ${item.bankrupt ? 'pill-fail' : 'pill-ok'}">
         ${item.bankrupt ? 'Deficit' : 'Solvent'}
       </span>
