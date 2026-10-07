@@ -407,6 +407,7 @@ bindTwoWay(rangeEquity, inputEquity);
 
 // Reset to Default State
 btnReset.addEventListener("click", () => {
+  if (shockInterval) clearInterval(shockInterval);
   inputRevenue.value = 200000;
   rangeRevenue.value = 200000;
   
@@ -419,8 +420,95 @@ btnReset.addEventListener("click", () => {
   inputEquity.value = 0;
   rangeEquity.value = 0;
   
+  if (autopilotLog) {
+    autopilotLog.innerHTML = "System reset to baseline. Ready for simulation.";
+  }
   runLiveSimulation();
 });
+
+// Closed-Loop AI Autopilot & Crisis Shock Module
+const btnToggleAutopilot = document.getElementById("btn-toggle-autopilot");
+const btnTriggerShock = document.getElementById("btn-trigger-shock");
+const autopilotStatusPill = document.getElementById("autopilot-status-pill");
+const autopilotLog = document.getElementById("autopilot-log");
+
+let isAutopilotActive = false;
+let shockInterval = null;
+
+if (btnToggleAutopilot) {
+  btnToggleAutopilot.addEventListener("click", () => {
+    isAutopilotActive = !isAutopilotActive;
+    if (isAutopilotActive) {
+      btnToggleAutopilot.classList.add("active");
+      btnToggleAutopilot.textContent = "AI Autopilot: ACTIVE";
+      autopilotStatusPill.className = "pill-active";
+      autopilotStatusPill.textContent = "● AI Closed-Loop";
+      autopilotLog.innerHTML = "<span style='color:#059669;'>Autopilot engaged. Actively monitoring reservoir levels & ready for disturbance feedback...</span>";
+    } else {
+      btnToggleAutopilot.classList.remove("active");
+      btnToggleAutopilot.textContent = "Enable AI Autopilot";
+      autopilotStatusPill.className = "pill-inactive";
+      autopilotStatusPill.textContent = "Manual Mode";
+      autopilotLog.innerHTML = "Autopilot disengaged. Sliders restored to manual control.";
+    }
+  });
+}
+
+if (btnTriggerShock) {
+  btnTriggerShock.addEventListener("click", () => {
+    if (shockInterval) clearInterval(shockInterval);
+
+    autopilotLog.innerHTML = "<strong style='color:#E11D48;'>⚠️ CRISIS SHOCK: Demand collapse! Revenue drops to $60,000/mo.</strong>";
+    
+    // Step 0: Immediate shock
+    inputRevenue.value = 60000;
+    rangeRevenue.value = 60000;
+    inputExpense.value = 180000;
+    rangeExpense.value = 180000;
+    runLiveSimulation();
+
+    let step = 0;
+    shockInterval = setInterval(() => {
+      step++;
+      const currentAsset = parseFloat(document.getElementById("val-asset").textContent.replace(/[^0-9.-]+/g,"")) || 0;
+
+      if (isAutopilotActive) {
+        // CLOSED-LOOP FEEDBACK CONTROLLER: u(t) = -K * x(t)
+        // Controller automatically steers physical actuators (valves)
+        if (currentAsset < 500000) {
+          // Throttles Expense valve down to $70,000
+          inputExpense.value = 70000;
+          rangeExpense.value = 70000;
+
+          // Injects non-debt equity buffer
+          const curEq = parseFloat(inputEquity.value) || 0;
+          inputEquity.value = curEq + 100000;
+          rangeEquity.value = curEq + 100000;
+
+          autopilotLog.innerHTML = `<span style='color:#059669;'>[t=Step ${step}] AI Feedback Control:</span> Low water detected ($${currentAsset.toLocaleString()}). Throttled expense to $70k & injected equity. <strong>Reservoir stabilized!</strong>`;
+        } else {
+          autopilotLog.innerHTML = `<span style='color:#059669;'>[t=Step ${step}] AI Autopilot:</span> Reservoir fluid level stable ($${currentAsset.toLocaleString()}). System safe.`;
+        }
+      } else {
+        // MANUAL / EXCEL MODE (No automated feedback intervention)
+        if (currentAsset <= 0) {
+          autopilotLog.innerHTML = `<strong style='color:#E11D48;'>[t=Step ${step}] MANUAL COLLAPSE:</strong> Cash exhausted ($0)! Reservoir dry. Company bankrupt.`;
+          clearInterval(shockInterval);
+          shockInterval = null;
+        } else {
+          autopilotLog.innerHTML = `<span style='color:#E11D48;'>[t=Step ${step}] Cash Burn:</span> Asset dropping by -$120,000/mo. No autonomous intervention.`;
+        }
+      }
+
+      runLiveSimulation();
+
+      if (step >= 6) {
+        clearInterval(shockInterval);
+        shockInterval = null;
+      }
+    }, 1000);
+  });
+}
 
 // Page Initialization
 window.addEventListener("DOMContentLoaded", () => {
