@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>會計世界模型與決策沙盒</title>
-  <meta name="description" content="極簡、好操作的會計物理引擎與五大要素決策沙盒推演系統">
+  <title>Accounting World Model | Sandbox</title>
+  <meta name="description" content="Minimalist, reactive Accounting World Model and decision simulation sandbox based on double-entry conservation">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -12,10 +12,10 @@
 </head>
 <body>
 
-  <!-- 頂部極簡導覽 -->
+  <!-- Top Navigation -->
   <header class="navbar">
     <div class="nav-brand">
-      <span class="brand-title">會計世界模型</span>
+      <span class="brand-title">Accounting World Model</span>
     </div>
     <div class="nav-status">
       <span class="status-indicator"></span>
@@ -24,18 +24,18 @@
     </div>
   </header>
 
-  <!-- 寬屏雙欄佈局 (1200px) -->
+  <!-- Widescreen Layout (1200px) -->
   <main class="dashboard-layout">
     
-    <!-- 左欄: 控制面板與參數滑桿 -->
+    <!-- Left Panel: Parameters & Controls -->
     <aside class="control-panel">
       
       <div class="section-heading">
-        <h2>流動參數設定</h2>
-        <span class="heading-desc">可拉動滑桿，或直接輸入數字</span>
+        <h2>Flow Parameters</h2>
+        <span class="heading-desc">Adjust sliders or enter numbers directly</span>
       </div>
 
-      <!-- 4 組滑動條 + 直接數字輸入框 (雙向聯動) -->
+      <!-- 4 Parameter Groups (Two-way linked slider + input) -->
       <div class="control-group">
         <div class="control-label-row">
           <label for="input-revenue">Revenue</label>
@@ -80,31 +80,31 @@
         <input type="range" id="range-equity" min="0" max="1000000" step="50000" value="0" class="slider">
       </div>
 
-      <!-- AI 評估簡報 -->
+      <!-- AI Evaluation Card -->
       <div id="ai-card" class="ai-card">
         <div class="ai-card-header">
           <span class="ai-tag">AI Evaluation</span>
           <span id="ai-status-pill" class="pill-safe">Solvent</span>
         </div>
-        <p id="ai-text" class="ai-text">載入中...</p>
+        <p id="ai-text" class="ai-text">Loading...</p>
       </div>
 
-      <!-- 快速記帳折疊區 -->
+      <!-- Manual Entry Injection -->
       <details class="manual-details">
-        <summary>單筆分錄注入測試</summary>
+        <summary>Manual Entry Injection</summary>
         <div class="manual-form">
           <div class="form-row">
             <select id="select-debit" class="select-clean">
               <option value="Asset">Debit: Asset</option>
               <option value="Expense">Debit: Expense</option>
-              <option value="Liability">Debit: Liability</option>
-              <option value="Equity">Debit: Equity</option>
+              <option value="Liability">Debit: Liability (-)</option>
+              <option value="Equity">Debit: Equity (-)</option>
             </select>
             <select id="select-credit" class="select-clean">
               <option value="Revenue">Credit: Revenue</option>
-              <option value="Liability">Credit: Liability</option>
-              <option value="Equity">Credit: Equity</option>
-              <option value="Asset">Credit: Asset</option>
+              <option value="Liability">Credit: Liability (+)</option>
+              <option value="Equity">Credit: Equity (+)</option>
+              <option value="Asset">Credit: Asset (-)</option>
             </select>
           </div>
           <div class="form-row">
@@ -115,10 +115,10 @@
       </details>
     </aside>
 
-    <!-- 右欄: 視覺化數據反饋與時間軸 -->
+    <!-- Right Panel: Real-time Feedback & Trajectory -->
     <section class="display-panel">
       
-      <!-- 頂部指標卡片: 英文專有名詞 -->
+      <!-- Top 5 Core Elements Cards -->
       <div class="metrics-grid">
         <div class="metric-card" id="card-asset">
           <span class="m-label">Asset</span>
@@ -161,18 +161,18 @@
         </div>
       </div>
 
-      <!-- 6 個月資產推演軌跡長條圖 -->
+      <!-- 6-Month Asset Trajectory Chart -->
       <div class="timeline-card">
         <div class="card-top-row">
           <h3>Asset Trajectory (6 Months)</h3>
           <span class="timeline-hint">Asset = Liability + Equity</span>
         </div>
         <div class="timeline-bars" id="timeline-bars">
-          <!-- JS 動態生成 -->
+          <!-- Populated by JS -->
         </div>
       </div>
 
-      <!-- 試算平衡表: 英文專有名詞 -->
+      <!-- Trial Balance Table -->
       <div class="table-card">
         <div class="card-top-row">
           <h3>Trial Balance</h3>
@@ -188,7 +188,7 @@
             </tr>
           </thead>
           <tbody id="tb-body">
-            <!-- JS 動態填充 -->
+            <!-- Populated by JS -->
           </tbody>
           <tfoot>
             <tr class="total-row">

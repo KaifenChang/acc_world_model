@@ -260,26 +260,26 @@ function updateTrialBalanceTable(engine) {
   totalCreditEl.textContent = formatMoney(totalCredit);
 }
 
-// AI 評估簡報
+// AI Evaluation Text
 function updateAIDiagnosis(bankruptMonth, timelineData, rev, exp) {
   if (bankruptMonth) {
     aiStatusPill.textContent = "Deficit Warning";
     aiStatusPill.className = "pill-danger";
     aiText.innerHTML = `
-      月度 Expense ($${exp.toLocaleString()}) 超過月度 Revenue ($${rev.toLocaleString()})。<br/>
-      企業 Asset 在 <strong>第 ${bankruptMonth} 個月</strong> 穿底耗盡（Asset 赤字 ${formatMoney(timelineData[bankruptMonth-1].asset)}）。需提高 Revenue 或引入 Liability / Equity 注資。
+      Monthly Expense ($${exp.toLocaleString()}) exceeds monthly Revenue ($${rev.toLocaleString()}).<br/>
+      Asset is depleted in <strong>Month ${bankruptMonth}</strong> (Deficit: ${formatMoney(timelineData[bankruptMonth-1].asset)}). Consider increasing Revenue or injecting Liability/Equity capital.
     `;
   } else {
     aiStatusPill.textContent = "Solvent";
     aiStatusPill.className = "pill-safe";
     aiText.innerHTML = `
-      動態保持良性平衡。月度淨收益 (${formatMoney(rev - exp)}) 穩定轉化為 Equity 積累。<br/>
-      預計第 6 個月 Asset 可達 <strong>${formatMoney(timelineData[5].asset)}</strong>，借貸恒等式嚴格成立。
+      Dynamic equilibrium holds. Monthly net profit (${formatMoney(rev - exp)}) steadily accumulates into Equity.<br/>
+      Projected Month 6 Asset is <strong>${formatMoney(timelineData[5].asset)}</strong>. Double-entry identity is preserved.
     `;
   }
 }
 
-// 雙向綁定: 滑動條 (Slider) 與 數值輸入框 (Input)
+// Two-way Binding: Slider & Number Input
 function bindTwoWay(slider, input) {
   slider.addEventListener("input", () => {
     input.value = slider.value;
@@ -297,7 +297,7 @@ bindTwoWay(rangeExpense, inputExpense);
 bindTwoWay(rangeLiability, inputLiability);
 bindTwoWay(rangeEquity, inputEquity);
 
-// 重設為預設狀態
+// Reset to Default State
 btnReset.addEventListener("click", () => {
   inputRevenue.value = 200000;
   rangeRevenue.value = 200000;
@@ -314,18 +314,18 @@ btnReset.addEventListener("click", () => {
   runLiveSimulation();
 });
 
-// 手動分錄注入
+// Manual Transaction Injection
 document.getElementById("btn-inject-tx").addEventListener("click", () => {
   const debitAcc = document.getElementById("select-debit").value;
   const creditAcc = document.getElementById("select-credit").value;
   const amount = parseFloat(document.getElementById("manual-amount").value) || 0;
 
   if (debitAcc === creditAcc) {
-    alert("借貸科目不能相同!");
+    alert("Debit and Credit accounts cannot be the same!");
     return;
   }
   if (amount <= 0) {
-    alert("請輸入大於 0 的金額!");
+    alert("Please enter an amount greater than 0!");
     return;
   }
 
