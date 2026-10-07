@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FlowLedger | 會計水流物理引擎與小型世界模型 AI</title>
+  <meta name="description" content="基於代數圖論、控制理論與流體守恆律的會計物理引擎與 AI 商業決策沙盒推演系統">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- 背景光暈裝飾 -->
+  <div class="glow-orb orb-1"></div>
+  <div class="glow-orb orb-2"></div>
+
+  <header class="app-header">
+    <div class="header-left">
+      <div class="logo-icon">🌊</div>
+      <div>
+        <h1 class="logo-title">FlowLedger <span class="badge-tag">World Model AI</span></h1>
+        <p class="logo-subtitle">會計水流物理引擎與動態決策沙盒 (Flow-based Accounting Engine)</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <div id="conservation-badge" class="conservation-badge badge-active">
+        <span class="pulse-dot"></span>
+        <span id="badge-text">基爾霍夫守恆律 100% 成立 (1ᵀ z = 0)</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-container">
+    <!-- 左側面板: 控制台與 AI 商業推演 -->
+    <section class="panel control-panel">
+      <div class="panel-header">
+        <h2 class="panel-title">🤖 AI 商業沙盒推演 (World Simulator)</h2>
+        <span class="badge-hint">控制理論狀態空間</span>
+      </div>
+
+      <div class="preset-group">
+        <span class="group-label">快速載入預設決策場景：</span>
+        <div class="button-row">
+          <button id="btn-preset-aggressive" class="btn btn-outline">🚀 激進擴張 (大採購+高薪)</button>
+          <button id="btn-preset-conservative" class="btn btn-outline btn-active">🛡️ 穩健獲利 (成本控制)</button>
+          <button id="btn-preset-crisis" class="btn btn-outline">⚠️ 危機自救 (融資過冬)</button>
+        </div>
+      </div>
+
+      <div class="action-inputs">
+        <div class="input-card">
+          <label for="input-sales">預估月營收 (Sales Revenue)</label>
+          <div class="input-prefix-box">
+            <span>$</span>
+            <input type="number" id="input-sales" value="200000" step="10000">
+          </div>
+        </div>
+
+        <div class="input-card">
+          <label for="input-expense">預估月營運費用 (Operating Expense)</label>
+          <div class="input-prefix-box">
+            <span>$</span>
+            <input type="number" id="input-expense" value="150000" step="10000">
+          </div>
+        </div>
+
+        <div class="input-card">
+          <label for="input-capex">首月固定資產投資 (Equipment Capex)</label>
+          <div class="input-prefix-box">
+            <span>$</span>
+            <input type="number" id="input-capex" value="0" step="50000">
+          </div>
+        </div>
+
+        <div class="input-card">
+          <label for="input-loan">首月銀行新增借款 (Bank Loan)</label>
+          <div class="input-prefix-box">
+            <span>$</span>
+            <input type="number" id="input-loan" value="0" step="50000">
+          </div>
+        </div>
+      </div>
+
+      <button id="btn-run-simulation" class="btn btn-primary btn-large">
+        ▶️ 執行 6 個月 AI 軌跡推演 (Simulate Trajectory)
+      </button>
+
+      <!-- AI 診斷結論區 -->
+      <div id="ai-conclusion-card" class="ai-conclusion-card">
+        <div class="ai-header">
+          <span class="ai-icon">🧠</span>
+          <strong>AI 財務長決策診斷 (CFO Insight)</strong>
+        </div>
+        <p id="ai-conclusion-text" class="ai-conclusion-text">
+          點擊上方按鈕執行推演，AI 將在會計物理引擎中模擬未來軌跡並給出破產風險預警。
+        </p>
+      </div>
+
+      <!-- 單筆即時交易調試 -->
+      <div class="manual-tx-section">
+        <h3 class="sub-title">⚡ 手動注入單筆流體事件 (Live Inject)</h3>
+        <div class="tx-input-grid">
+          <select id="select-debit" class="select-styled">
+            <option value="Cash">借方: 現金 (Cash +)</option>
+            <option value="Equipment">借方: 設備 (Equipment +)</option>
+            <option value="Operating Expense">借方: 費用 (Expense +)</option>
+            <option value="Bank Loan">借方: 還款 (Loan -)</option>
+          </select>
+          <select id="select-credit" class="select-styled">
+            <option value="Common Stock">貸方: 股本投入 (Equity +)</option>
+            <option value="Sales Revenue">貸方: 銷貨收入 (Revenue +)</option>
+            <option value="Bank Loan">貸方: 銀行借款 (Loan +)</option>
+            <option value="Cash">貸方: 現金付款 (Cash -)</option>
+          </select>
+          <input type="number" id="manual-amount" class="input-small" placeholder="金額" value="50000">
+          <button id="btn-inject-tx" class="btn btn-secondary">注入水流</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 右側面板: 視覺化水箱存量儀表板 -->
+    <section class="panel tank-panel">
+      <div class="panel-header">
+        <h2 class="panel-title">🌊 會計水箱存量儀表板 (State Vector z)</h2>
+        <span class="badge-hint">即時水位相位圖</span>
+      </div>
+
+      <!-- 水箱網格 -->
+      <div class="tank-grid">
+        <!-- 現金水箱 -->
+        <div class="tank-card" id="tank-card-cash">
+          <div class="tank-header">
+            <span class="tank-name">💧 庫存現金 (Cash)</span>
+            <span class="tank-type badge-asset">資產 (+1)</span>
+          </div>
+          <div class="tank-container">
+            <div id="tank-fluid-cash" class="tank-fluid fluid-blue" style="height: 65%;">
+              <div class="wave"></div>
+            </div>
+            <div class="tank-glass-shine"></div>
+            <div class="tank-readout" id="tank-val-cash">$1,000,000</div>
+          </div>
+          <div class="tank-footer">
+            <small>破產紅線: &lt; $0</small>
+          </div>
+        </div>
+
+        <!-- 設備資產水箱 -->
+        <div class="tank-card" id="tank-card-equipment">
+          <div class="tank-header">
+            <span class="tank-name">🏭 生產設備 (Equipment)</span>
+            <span class="tank-type badge-asset">資產 (+1)</span>
+          </div>
+          <div class="tank-container">
+            <div id="tank-fluid-equipment" class="tank-fluid fluid-cyan" style="height: 0%;">
+              <div class="wave"></div>
+            </div>
+            <div class="tank-glass-shine"></div>
+            <div class="tank-readout" id="tank-val-equipment">$0</div>
+          </div>
+          <div class="tank-footer">
+            <small>長期固定資產</small>
+          </div>
+        </div>
+
+        <!-- 銀行借款水箱 -->
+        <div class="tank-card" id="tank-card-loan">
+          <div class="tank-header">
+            <span class="tank-name">🏦 銀行借款 (Loan)</span>
+            <span class="tank-type badge-liability">負債 (-1)</span>
+          </div>
+          <div class="tank-container">
+            <div id="tank-fluid-loan" class="tank-fluid fluid-amber" style="height: 0%;">
+              <div class="wave"></div>
+            </div>
+            <div class="tank-glass-shine"></div>
+            <div class="tank-readout" id="tank-val-loan">$0</div>
+          </div>
+          <div class="tank-footer">
+            <small>外部負債責任</small>
+          </div>
+        </div>
+
+        <!-- 股本權益水箱 -->
+        <div class="tank-card" id="tank-card-equity">
+          <div class="tank-header">
+            <span class="tank-name">🏛️ 實收資本 (Stock)</span>
+            <span class="tank-type badge-equity">權益 (-1)</span>
+          </div>
+          <div class="tank-container">
+            <div id="tank-fluid-equity" class="tank-fluid fluid-purple" style="height: 65%;">
+              <div class="wave"></div>
+            </div>
+            <div class="tank-glass-shine"></div>
+            <div class="tank-readout" id="tank-val-equity">$1,000,000</div>
+          </div>
+          <div class="tank-footer">
+            <small>股東原始資本</small>
+          </div>
+        </div>
+
+        <!-- 留存收益水箱 -->
+        <div class="tank-card" id="tank-card-retained">
+          <div class="tank-header">
+            <span class="tank-name">💎 留存收益 (Retained)</span>
+            <span class="tank-type badge-equity">權益 (-1)</span>
+          </div>
+          <div class="tank-container">
+            <div id="tank-fluid-retained" class="tank-fluid fluid-emerald" style="height: 10%;">
+              <div class="wave"></div>
+            </div>
+            <div class="tank-glass-shine"></div>
+            <div class="tank-readout" id="tank-val-retained">$0</div>
+          </div>
+          <div class="tank-footer">
+            <small>累計創造淨利潤</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6 個月推演軌跡時間軸 -->
+      <div class="trajectory-section">
+        <h3 class="sub-title">📈 6 個月推演軌跡與斷流預警 (Trajectory Chart)</h3>
+        <div id="trajectory-timeline" class="trajectory-timeline">
+          <!-- 由 JS 動態生成月份卡片 -->
+        </div>
+      </div>
+
+      <!-- 即時試算平衡表檢視 (Trial Balance) -->
+      <div class="trial-balance-card">
+        <div class="tb-header">
+          <strong>⚖️ 試算平衡表 (Live Trial Balance)</strong>
+          <span id="tb-status-tag" class="tag-balanced">借貸嚴格守恆 (零誤差)</span>
+        </div>
+        <table class="tb-table" id="tb-table">
+          <thead>
+            <tr>
+              <th>會計科目 (Account)</th>
+              <th>極性 P</th>
+              <th>借方餘額 (Debit)</th>
+              <th>貸方餘額 (Credit)</th>
+            </tr>
+          </thead>
+          <tbody id="tb-body">
+            <!-- 由 JS 動態填充 -->
+          </tbody>
+          <tfoot>
+            <tr class="tb-total-row">
+              <td colspan="2">合計 (Total)</td>
+              <td id="total-debit">$0.00</td>
+              <td id="total-credit">$0.00</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <p>FlowLedger &copy; 2026 | 基於圖論關聯矩陣 (Incidence Matrix) 與基爾霍夫守恆律的會計物理引擎</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
