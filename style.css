@@ -278,60 +278,6 @@ body {
   line-height: 1.5;
 }
 
-/* 手動分錄折疊區 */
-.manual-details {
-  margin-top: 1.2rem;
-  border-top: 1px solid var(--border-subtle);
-  padding-top: 0.8rem;
-}
-
-.manual-details summary {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  cursor: pointer;
-  user-select: none;
-}
-
-.manual-form {
-  margin-top: 0.8rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.form-row {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.select-clean, .input-clean {
-  flex: 1;
-  font-family: var(--font-sans);
-  font-size: 0.78rem;
-  padding: 0.45rem;
-  border-radius: 6px;
-  border: 1px solid var(--border-light);
-  background: var(--bg-surface);
-  color: var(--text-title);
-  outline: none;
-}
-
-.input-clean {
-  font-family: var(--font-mono);
-  max-width: 100px;
-}
-
-.btn-solid {
-  background: var(--color-primary);
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  font-size: 0.78rem;
-  font-weight: 600;
-  padding: 0.45rem 1rem;
-  cursor: pointer;
-}
 
 /* 右側展示面板 (Display Panel) */
 .display-panel {

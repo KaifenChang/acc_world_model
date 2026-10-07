@@ -88,31 +88,6 @@
         </div>
         <p id="ai-text" class="ai-text">Loading...</p>
       </div>
-
-      <!-- Manual Entry Injection -->
-      <details class="manual-details">
-        <summary>Manual Entry Injection</summary>
-        <div class="manual-form">
-          <div class="form-row">
-            <select id="select-debit" class="select-clean">
-              <option value="Asset">Debit: Asset</option>
-              <option value="Expense">Debit: Expense</option>
-              <option value="Liability">Debit: Liability (-)</option>
-              <option value="Equity">Debit: Equity (-)</option>
-            </select>
-            <select id="select-credit" class="select-clean">
-              <option value="Revenue">Credit: Revenue</option>
-              <option value="Liability">Credit: Liability (+)</option>
-              <option value="Equity">Credit: Equity (+)</option>
-              <option value="Asset">Credit: Asset (-)</option>
-            </select>
-          </div>
-          <div class="form-row">
-            <input type="number" id="manual-amount" class="input-clean" value="50000" step="10000">
-            <button id="btn-inject-tx" class="btn-solid">Post</button>
-          </div>
-        </div>
-      </details>
     </aside>
 
     <!-- Right Panel: Real-time Feedback & Trajectory -->

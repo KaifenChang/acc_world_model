@@ -314,31 +314,7 @@ btnReset.addEventListener("click", () => {
   runLiveSimulation();
 });
 
-// Manual Transaction Injection
-document.getElementById("btn-inject-tx").addEventListener("click", () => {
-  const debitAcc = document.getElementById("select-debit").value;
-  const creditAcc = document.getElementById("select-credit").value;
-  const amount = parseFloat(document.getElementById("manual-amount").value) || 0;
-
-  if (debitAcc === creditAcc) {
-    alert("Debit and Credit accounts cannot be the same!");
-    return;
-  }
-  if (amount <= 0) {
-    alert("Please enter an amount greater than 0!");
-    return;
-  }
-
-  const b = [0, 0, 0, 0, 0];
-  b[mainEngine.accMap[debitAcc]] = +1.0;
-  b[mainEngine.accMap[creditAcc]] = -1.0;
-
-  mainEngine.applyTransaction(b, amount);
-  updateMetricsCards(mainEngine);
-  updateTrialBalanceTable(mainEngine);
-});
-
-// 頁面初始化
+// Page Initialization
 window.addEventListener("DOMContentLoaded", () => {
   runLiveSimulation();
 });
