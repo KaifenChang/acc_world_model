@@ -42,28 +42,6 @@ body {
   align-items: center;
 }
 
-.nav-brand {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-}
-
-.brand-title {
-  font-size: 1.15rem;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-  color: var(--text-title);
-}
-
-.brand-badge {
-  font-size: 0.68rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  background: var(--border-subtle);
-  padding: 0.15rem 0.45rem;
-  border-radius: 4px;
-}
-
 .nav-status {
   display: flex;
   align-items: center;
