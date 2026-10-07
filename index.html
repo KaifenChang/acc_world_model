@@ -77,44 +77,122 @@
     <section class="display-panel">
       
       <!-- Top 5 Core Elements Cards -->
-      <div class="metrics-grid">
-        <div class="metric-card" id="card-asset">
-          <span class="m-label">Asset</span>
-          <div class="m-val" id="val-asset">$1,000,000</div>
-          <div class="m-bar-track">
-            <div class="m-bar-fill" id="bar-asset" style="width: 50%;"></div>
+      <!-- Interactive Hydraulic Water Tank Circuit -->
+      <div class="water-network-card">
+        <div class="card-top-row">
+          <div>
+            <h3>Accounting Fluid Network</h3>
+            <span class="timeline-hint">Real-time hydraulic balance: Accounts = Tanks | Transactions = Pipe Flows</span>
           </div>
+          <span class="identity-badge" id="identity-badge">Asset = Liability + Equity</span>
         </div>
 
-        <div class="metric-card" id="card-liability">
-          <span class="m-label">Liability</span>
-          <div class="m-val" id="val-liability">$0</div>
-          <div class="m-bar-track">
-            <div class="m-bar-fill fill-amber" id="bar-liability" style="width: 0%;"></div>
-          </div>
-        </div>
+        <div class="hydraulic-circuit">
+          <!-- SVG Connecting Pipes Overlay -->
+          <svg class="circuit-pipes-svg" viewBox="0 0 760 320" preserveAspectRatio="none">
+            <!-- Revenue to Asset Pipe -->
+            <path class="pipe-bg" d="M 130 110 L 130 160 L 260 160" />
+            <path id="pipe-rev" class="pipe-active flow-inflow" d="M 130 110 L 130 160 L 260 160" />
 
-        <div class="metric-card" id="card-equity">
-          <span class="m-label">Equity</span>
-          <div class="m-val" id="val-equity">$1,000,000</div>
-          <div class="m-bar-track">
-            <div class="m-bar-fill fill-dark" id="bar-equity" style="width: 50%;"></div>
-          </div>
-        </div>
+            <!-- Asset to Expense Pipe -->
+            <path class="pipe-bg" d="M 500 160 L 630 160 L 630 110" />
+            <path id="pipe-exp" class="pipe-active flow-outflow" d="M 500 160 L 630 160 L 630 110" />
 
-        <div class="metric-card" id="card-revenue">
-          <span class="m-label">Revenue</span>
-          <div class="m-val" id="val-revenue">$0</div>
-          <div class="m-bar-track">
-            <div class="m-bar-fill fill-emerald" id="bar-revenue" style="width: 0%;"></div>
-          </div>
-        </div>
+            <!-- Liability to Asset Pipe -->
+            <path class="pipe-bg" d="M 130 210 L 130 210 L 260 210" />
+            <path id="pipe-liab" class="pipe-active flow-amber" d="M 130 210 L 260 210" />
 
-        <div class="metric-card" id="card-expense">
-          <span class="m-label">Expense</span>
-          <div class="m-val" id="val-expense">$0</div>
-          <div class="m-bar-track">
-            <div class="m-bar-fill fill-rose" id="bar-expense" style="width: 0%;"></div>
+            <!-- Asset to Equity Pipe -->
+            <path class="pipe-bg" d="M 500 210 L 630 210" />
+            <path id="pipe-eq" class="pipe-active flow-dark" d="M 500 210 L 630 210" />
+          </svg>
+
+          <!-- 3-Column Tank Layout -->
+          <!-- Col 1: Inflow Sources (Revenue & Liability) -->
+          <div class="circuit-col col-sources">
+            <div class="water-tank tank-sm" id="tank-revenue">
+              <div class="tank-info">
+                <span class="tank-name">Revenue (Inflow)</span>
+                <span class="tank-val" id="val-revenue">$200,000</span>
+              </div>
+              <div class="tank-glass">
+                <div class="tank-liquid liquid-revenue" id="water-revenue" style="height: 40%;">
+                  <div class="liquid-wave"></div>
+                </div>
+                <div class="tank-ticks"><span>$500K</span><span>$250K</span><span>$0</span></div>
+              </div>
+              <span class="tank-pipe-tag">↓ Inflow Pipe</span>
+            </div>
+
+            <div class="water-tank tank-sm" id="tank-liability">
+              <div class="tank-info">
+                <span class="tank-name">Liability (Debt)</span>
+                <span class="tank-val" id="val-liability">$0</span>
+              </div>
+              <div class="tank-glass">
+                <div class="tank-liquid liquid-liability" id="water-liability" style="height: 0%;">
+                  <div class="liquid-wave"></div>
+                </div>
+                <div class="tank-ticks"><span>$1M</span><span>$500K</span><span>$0</span></div>
+              </div>
+              <span class="tank-pipe-tag">⇄ Financing Conduit</span>
+            </div>
+          </div>
+
+          <!-- Col 2: Center Operating Reservoir (Asset) -->
+          <div class="circuit-col col-center">
+            <div class="water-tank tank-hero" id="tank-asset">
+              <div class="tank-info">
+                <span class="tank-name hero-name">Asset Reservoir (Cash & Liquid)</span>
+                <span class="tank-val hero-val" id="val-asset">$1,000,000</span>
+              </div>
+              <div class="tank-glass glass-hero">
+                <div class="tank-liquid liquid-asset" id="water-asset" style="height: 50%;">
+                  <div class="liquid-wave wave-hero"></div>
+                </div>
+                <div class="tank-ticks ticks-hero">
+                  <span>$2.0M</span>
+                  <span>$1.5M</span>
+                  <span>$1.0M</span>
+                  <span>$0.5M</span>
+                  <span>$0.0M</span>
+                </div>
+              </div>
+              <div class="hero-status-row">
+                <span class="hero-tag" id="asset-tank-status">Operating Tank Normal</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Col 3: Drains & Capital Reserve (Expense & Equity) -->
+          <div class="circuit-col col-sinks">
+            <div class="water-tank tank-sm" id="tank-expense">
+              <div class="tank-info">
+                <span class="tank-name">Expense (Outflow)</span>
+                <span class="tank-val" id="val-expense">$150,000</span>
+              </div>
+              <div class="tank-glass">
+                <div class="tank-liquid liquid-expense" id="water-expense" style="height: 30%;">
+                  <div class="liquid-wave"></div>
+                </div>
+                <div class="tank-ticks"><span>$500K</span><span>$250K</span><span>$0</span></div>
+              </div>
+              <span class="tank-pipe-tag">↑ Outflow Drain</span>
+            </div>
+
+            <div class="water-tank tank-sm" id="tank-equity">
+              <div class="tank-info">
+                <span class="tank-name">Equity (Reserve)</span>
+                <span class="tank-val" id="val-equity">$1,000,000</span>
+              </div>
+              <div class="tank-glass">
+                <div class="tank-liquid liquid-equity" id="water-equity" style="height: 50%;">
+                  <div class="liquid-wave"></div>
+                </div>
+                <div class="tank-ticks"><span>$2M</span><span>$1M</span><span>$0</span></div>
+              </div>
+              <span class="tank-pipe-tag">⇄ Capital Retention</span>
+            </div>
           </div>
         </div>
       </div>

@@ -172,8 +172,8 @@ function runLiveSimulation() {
     });
   }
 
-  // 1. 刷新頂部五大要素卡片 (使用 currentEngine 呈現活躍的當期流量與存量)
-  updateMetricsCards(currentEngine);
+  // 1. 刷新五大水槽流體管網 (Hydraulic Water Tank Circuit)
+  updateWaterTanks(currentEngine, rev, exp);
 
   // 1.5 刷新標準會計財務比率
   updateFinancialRatios(currentEngine, rev, exp, initialStartingAsset);
@@ -242,42 +242,79 @@ function updateFinancialRatios(engine, rev, exp, initialStartingAsset) {
   identityBadge.textContent = `Asset (${formatMoney(asset)}) = Liab (${formatMoney(liability)}) + Eq (${formatMoney(equity + netFlow)})`;
 }
 
-// 刷新五大要素指標卡片
-function updateMetricsCards(engine) {
-  const maxScale = 2000000;
-
+// 刷新五大水槽流體管網 (Hydraulic Water Tank Circuit)
+function updateWaterTanks(engine, rev, exp) {
   const asset = engine.getBalance("Asset");
   const liability = engine.getBalance("Liability");
   const equity = engine.getBalance("Equity");
   const revenue = engine.getBalance("Revenue");
   const expense = engine.getBalance("Expense");
 
-  // Asset (資產)
+  // 1. Central Asset Reservoir
   document.getElementById("val-asset").textContent = formatMoney(asset);
-  const barAsset = document.getElementById("bar-asset");
-  const assetW = Math.max(0, Math.min(100, (asset / maxScale) * 100));
-  barAsset.style.width = `${assetW}%`;
-  if (asset < 0) {
-    barAsset.classList.add("fill-danger");
-  } else {
-    barAsset.classList.remove("fill-danger");
+  const waterAsset = document.getElementById("water-asset");
+  const assetPct = Math.max(0, Math.min(100, (asset / 2000000) * 100));
+  waterAsset.style.height = `${assetPct}%`;
+
+  const assetStatus = document.getElementById("asset-tank-status");
+  if (assetStatus) {
+    if (asset <= 0) {
+      waterAsset.classList.add("deficit");
+      assetStatus.textContent = "DRY / INSOLVENT (CRASH)";
+      assetStatus.className = "hero-tag tag-deficit";
+    } else if (asset < 300000) {
+      waterAsset.classList.remove("deficit");
+      assetStatus.textContent = "CRITICAL WATER LEVEL (< $300K)";
+      assetStatus.className = "hero-tag tag-deficit";
+    } else {
+      waterAsset.classList.remove("deficit");
+      assetStatus.textContent = "OPERATING RESERVOIR SOLVENT";
+      assetStatus.className = "hero-tag";
+    }
   }
 
-  // Liability (負債)
-  document.getElementById("val-liability").textContent = formatMoney(liability);
-  document.getElementById("bar-liability").style.width = `${Math.max(0, Math.min(100, (liability / maxScale) * 100))}%`;
-
-  // Equity (權益)
-  document.getElementById("val-equity").textContent = formatMoney(equity);
-  document.getElementById("bar-equity").style.width = `${Math.max(0, Math.min(100, (equity / maxScale) * 100))}%`;
-
-  // Revenue (收入)
+  // 2. Revenue Tank
   document.getElementById("val-revenue").textContent = formatMoney(revenue);
-  document.getElementById("bar-revenue").style.width = `${Math.max(0, Math.min(100, (revenue / (maxScale * 0.5)) * 100))}%`;
+  const revPct = Math.max(0, Math.min(100, (revenue / 500000) * 100));
+  document.getElementById("water-revenue").style.height = `${revPct}%`;
 
-  // Expense (費用)
+  // 3. Expense Tank
   document.getElementById("val-expense").textContent = formatMoney(expense);
-  document.getElementById("bar-expense").style.width = `${Math.max(0, Math.min(100, (expense / (maxScale * 0.5)) * 100))}%`;
+  const expPct = Math.max(0, Math.min(100, (expense / 500000) * 100));
+  document.getElementById("water-expense").style.height = `${expPct}%`;
+
+  // 4. Liability Tank
+  document.getElementById("val-liability").textContent = formatMoney(liability);
+  const liabPct = Math.max(0, Math.min(100, (liability / 1000000) * 100));
+  document.getElementById("water-liability").style.height = `${liabPct}%`;
+
+  // 5. Equity Tank
+  document.getElementById("val-equity").textContent = formatMoney(equity);
+  const eqPct = Math.max(0, Math.min(100, (equity / 2000000) * 100));
+  document.getElementById("water-equity").style.height = `${eqPct}%`;
+
+  // Dynamic Flow Pipes Animation
+  const pipeRev = document.getElementById("pipe-rev");
+  if (pipeRev) {
+    if (rev > 0) {
+      pipeRev.style.display = "block";
+      const speed = Math.max(0.4, 2.0 - (rev / 500000) * 1.5);
+      pipeRev.style.animationDuration = `${speed.toFixed(2)}s`;
+    } else {
+      pipeRev.style.display = "none";
+    }
+  }
+
+  const pipeExp = document.getElementById("pipe-exp");
+  if (pipeExp) {
+    if (exp > 0) {
+      pipeExp.style.display = "block";
+      const speed = Math.max(0.4, 2.0 - (exp / 500000) * 1.5);
+      pipeExp.style.animationDuration = `${speed.toFixed(2)}s`;
+    } else {
+      pipeExp.style.display = "none";
+    }
+  }
 }
 
 // 刷新 6 個月資產存量長條圖
