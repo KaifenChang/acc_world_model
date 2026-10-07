@@ -231,52 +231,6 @@ body {
 
 .hidden-input { display: none; }
 
-/* AI 評估卡片 */
-.ai-card {
-  background: #F4F4F5;
-  border: 1px solid var(--border-light);
-  border-radius: 8px;
-  padding: 0.9rem;
-  margin-top: 1.2rem;
-}
-
-.ai-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.4rem;
-}
-
-.ai-tag {
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--text-muted);
-}
-
-.pill-safe {
-  font-size: 0.68rem;
-  font-weight: 700;
-  color: var(--color-emerald);
-  background: #ECFDF5;
-  padding: 0.15rem 0.45rem;
-  border-radius: 4px;
-}
-
-.pill-danger {
-  font-size: 0.68rem;
-  font-weight: 700;
-  color: var(--color-rose);
-  background: #FFF1F2;
-  padding: 0.15rem 0.45rem;
-  border-radius: 4px;
-}
-
-.ai-text {
-  font-size: 0.82rem;
-  color: var(--text-body);
-  line-height: 1.5;
-}
 
 
 /* 右側展示面板 (Display Panel) */

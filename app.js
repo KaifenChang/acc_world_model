@@ -69,9 +69,6 @@ const inputLiability = document.getElementById("input-liability");
 const inputEquity = document.getElementById("input-equity");
 
 const btnReset = document.getElementById("btn-reset");
-
-const aiStatusPill = document.getElementById("ai-status-pill");
-const aiText = document.getElementById("ai-text");
 const timelineBarsContainer = document.getElementById("timeline-bars");
 
 const tbBody = document.getElementById("tb-body");
@@ -186,9 +183,6 @@ function runLiveSimulation() {
 
   // 3. 刷新五大要素試算表 (呈現 DEALER 借貸平衡 1ᵀ z = 0)
   updateTrialBalanceTable(currentEngine);
-
-  // 4. 刷新 AI 評估簡報
-  updateAIDiagnosis(bankruptMonth, timelineData, rev, exp);
 }
 
 // 刷新標準會計財務比率與恆等式
@@ -359,24 +353,6 @@ function updateTrialBalanceTable(engine) {
   totalCreditEl.textContent = formatMoney(totalCredit);
 }
 
-// AI Evaluation Text
-function updateAIDiagnosis(bankruptMonth, timelineData, rev, exp) {
-  if (bankruptMonth) {
-    aiStatusPill.textContent = "Deficit Warning";
-    aiStatusPill.className = "pill-danger";
-    aiText.innerHTML = `
-      Monthly Expense ($${exp.toLocaleString()}) exceeds monthly Revenue ($${rev.toLocaleString()}).<br/>
-      Asset is depleted in <strong>Month ${bankruptMonth}</strong> (Deficit: ${formatMoney(timelineData[bankruptMonth-1].asset)}). Consider increasing Revenue or injecting Liability/Equity capital.
-    `;
-  } else {
-    aiStatusPill.textContent = "Solvent";
-    aiStatusPill.className = "pill-safe";
-    aiText.innerHTML = `
-      Dynamic equilibrium holds. Monthly net profit (${formatMoney(rev - exp)}) steadily accumulates into Equity.<br/>
-      Projected Month 6 Asset is <strong>${formatMoney(timelineData[5].asset)}</strong>. Double-entry identity is preserved.
-    `;
-  }
-}
 
 // Two-way Binding: Slider & Number Input
 function bindTwoWay(slider, input) {
