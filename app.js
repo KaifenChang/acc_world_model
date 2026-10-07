@@ -1,5 +1,5 @@
 /**
- * FlowLedger - 會計物理引擎與 AI 世界模型沙盒邏輯 (Widescreen Clean Edition)
+ * 會計物理引擎與 AI 世界模型沙盒邏輯
  * 支援滑動條即時響應、即時軌跡渲染與守恆驗證
  */
 
