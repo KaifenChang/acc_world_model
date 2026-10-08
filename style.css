@@ -132,6 +132,246 @@ body {
   color: var(--text-muted);
 }
 
+/* AI 會計分流工作台 (LLM Transaction Triage Desk) */
+.triage-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
+  padding: 1rem;
+  margin: 0.8rem 0 1.1rem 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.triage-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.triage-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #1E293B;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.api-pill-online {
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 0.15rem 0.5rem;
+  border-radius: 9999px;
+  background: #ECFDF5;
+  color: #059669;
+  border: 1px solid #A7F3D0;
+}
+
+.triage-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.triage-textarea {
+  width: 100%;
+  border: 1px solid #CBD5E1;
+  border-radius: 6px;
+  padding: 0.6rem 0.75rem;
+  font-family: inherit;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--text-title);
+  background: #F8FAFC;
+  resize: vertical;
+  min-height: 52px;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.triage-textarea:focus {
+  outline: none;
+  border-color: #2563EB;
+  background: #FFFFFF;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.12);
+}
+
+.triage-btn-row {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-triage {
+  background: #09090B;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  padding: 0.45rem 0.85rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all 0.15s ease;
+}
+
+.btn-triage:hover {
+  background: #27272A;
+  transform: translateY(-1px);
+}
+
+.btn-triage:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.triage-quick-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+  padding-top: 0.2rem;
+}
+
+.quick-hint {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  width: 100%;
+  margin-bottom: 0.1rem;
+}
+
+.quick-chip {
+  background: #F1F5F9;
+  border: 1px solid #E2E8F0;
+  border-radius: 4px;
+  font-size: 0.68rem;
+  padding: 0.2rem 0.45rem;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: inherit;
+}
+
+.quick-chip:hover {
+  background: #E2E8F0;
+  color: #0F172A;
+  border-color: #CBD5E1;
+}
+
+/* 分流結果展示卡片 */
+.triage-result {
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-left: 3px solid #2563EB;
+  border-radius: 6px;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.triage-result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.result-tag {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #1E293B;
+}
+
+.result-amount {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #059669;
+}
+
+.triage-entry-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
+  padding: 0.5rem 0.65rem;
+}
+
+.entry-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.72rem;
+}
+
+.entry-type {
+  font-weight: 600;
+  color: var(--text-muted);
+  width: 70px;
+}
+
+.debit-line strong {
+  color: #2563EB;
+  flex: 1;
+}
+
+.credit-line strong {
+  color: #D97706;
+  flex: 1;
+}
+
+.entry-detail {
+  font-size: 0.7rem;
+  color: var(--text-body);
+  background: #F1F5F9;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+}
+
+.triage-reasoning {
+  font-size: 0.7rem;
+  line-height: 1.45;
+  color: #475569;
+  background: #F1F5F9;
+  padding: 0.5rem 0.65rem;
+  border-radius: 6px;
+  border-left: 2px solid #64748B;
+}
+
+.btn-apply-entry {
+  background: #059669;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  transition: all 0.15s ease;
+}
+
+.btn-apply-entry:hover {
+  background: #047857;
+  transform: translateY(-1px);
+}
+
 /* Closed-Loop Autopilot & Stress Shock Module */
 .autopilot-card {
   background: #F8FAFC;

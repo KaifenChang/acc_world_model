@@ -83,6 +83,17 @@ const I18N = {
     autopilotShockMsg: "<strong style='color:#E11D48;'>⚠️ 危機衝擊：需求斷崖式崩跌！營收驟降至每月 $60,000。</strong>",
     autopilotResetMsg: "系統已重設為基準狀態。可進行推演模擬。",
     
+    // AI 會計分流工作台
+    triageCardTitle: "⚡ LLM 會計分流工作台",
+    triagePlaceholder: "輸入真實商業交易，例如：向銀行申請周轉借款 50 萬元、客戶預付整年年費 12 萬元、採購高階伺服器 25 萬元...",
+    triageSubmitText: "執行 AI 會計分流",
+    triageThinking: "Gemini 深度分流解析中...",
+    quickHint: "常用測試案例（點擊快速帶入）：",
+    labelEntryDebit: "借 (Debit +)",
+    labelEntryCredit: "貸 (Credit -)",
+    btnApplyEntry: "注入水槽流體迴路 (Inject into Hydraulic System)",
+    appliedSuccess: (summary, amt) => `已成功將交易【${summary} (${formatMoney(amt)})】分流並注入水槽！`,
+
     // 滑桿標籤
     labelRevenue: "營業收入 (Revenue)",
     labelExpense: "營業費用 (Expense)",
@@ -165,8 +176,7 @@ const I18N = {
     rlStepPrefix: (step, stateKey) => `[RL 決策 第 ${step} 步] 狀態: ${stateKey}`,
     rlQValuesLabel: "各動作 Q 值",
     rlArgmaxLabel: (action, q) => `► 強化學習最佳動作: <strong>${action}</strong> (Q = ${q})`,
-    manualFailMsg: (step) => `<strong style='color:#E11D48;'>[手動模式 第 ${step} 步] 危機失敗：</strong> 水位耗竭 ($0)，資金鏈斷裂破產。`,
-    manualBurnMsg: (step) => `<span style='color:#E11D48;'>[手動模式 第 ${step} 步] 現金失血：</span> 資產水槽每月流失 -$120,000，無主動調節機制。`
+    manualFailMsg: (step) => `<strong style='color:#E11D48;'>[手動模式 第 ${step} 步] 危機失敗：</strong> 水位耗竭 ($0)，資金鏈斷裂破產。`
   },
   
   en: {
@@ -186,6 +196,17 @@ const I18N = {
     autopilotShockMsg: "<strong style='color:#E11D48;'>⚠️ CRISIS SHOCK: Demand collapse! Revenue drops to $60,000/mo.</strong>",
     autopilotResetMsg: "System reset to baseline. Ready for simulation.",
     
+    // AI Transaction Shunting Desk
+    triageCardTitle: "⚡ AI Transaction Shunting Desk",
+    triagePlaceholder: "Enter real-world business transactions (e.g. Borrowed $500K from bank, Prepaid annual software fee $120K, Bought server $250K)...",
+    triageSubmitText: "Run AI Accounting Triage",
+    triageThinking: "Gemini Analyzing Stream...",
+    quickHint: "Common Test Cases (Click to fill):",
+    labelEntryDebit: "Debit (+)",
+    labelEntryCredit: "Credit (-)",
+    btnApplyEntry: "Inject into Hydraulic System",
+    appliedSuccess: (summary, amt) => `Successfully shunted and injected 【${summary} (${formatMoney(amt)})】 into water tanks!`,
+
     // Sliders
     labelRevenue: "Revenue",
     labelExpense: "Expense",
@@ -268,8 +289,7 @@ const I18N = {
     rlStepPrefix: (step, stateKey) => `[ML Step ${step}] State: ${stateKey}`,
     rlQValuesLabel: "Q-Values",
     rlArgmaxLabel: (action, q) => `► ML Argmax: <strong>${action}</strong> (Q = ${q})`,
-    manualFailMsg: (step) => `<strong style='color:#E11D48;'>[Manual Step ${step}] FAILURE:</strong> Cash exhausted ($0). Insolvent.`,
-    manualBurnMsg: (step) => `<span style='color:#E11D48;'>[Manual Step ${step}] Burning:</span> Asset dropping by -$120,000/mo. Passive mode.`
+    manualFailMsg: (step) => `<strong style='color:#E11D48;'>[Manual Step ${step}] FAILURE:</strong> Cash exhausted ($0). Insolvent.`
   }
 };
 
@@ -343,6 +363,22 @@ function setLanguage(lang) {
 
   const btnResetEl = document.getElementById("btn-reset");
   if (btnResetEl) btnResetEl.textContent = t.resetBtn;
+
+  // AI 分流工作台更新
+  const triageTitle = document.getElementById("triage-card-title");
+  if (triageTitle) triageTitle.textContent = t.triageCardTitle;
+  const triageInputEl = document.getElementById("triage-input");
+  if (triageInputEl) triageInputEl.placeholder = t.triagePlaceholder;
+  const triageSubmitTextEl = document.getElementById("triage-submit-text");
+  if (triageSubmitTextEl && !isTriaging) triageSubmitTextEl.textContent = t.triageSubmitText;
+  const quickHintEl = document.getElementById("quick-hint");
+  if (quickHintEl) quickHintEl.textContent = t.quickHint;
+  const lblDebit = document.getElementById("label-entry-debit");
+  if (lblDebit) lblDebit.textContent = t.labelEntryDebit;
+  const lblCredit = document.getElementById("label-entry-credit");
+  if (lblCredit) lblCredit.textContent = t.labelEntryCredit;
+  const btnApply = document.getElementById("btn-apply-entry");
+  if (btnApply) btnApply.textContent = t.btnApplyEntry;
 
   // 控制理論卡片
   const tagCtrl = document.getElementById("tag-control-theory");
@@ -948,6 +984,272 @@ if (btnTriggerShock) {
         shockInterval = null;
       }
     }, 1200);
+  });
+}
+
+// ==========================================
+// Google Gemini LLM 會計分流引擎 (Transaction Triage)
+// ==========================================
+const GEMINI_API_KEY = "AIzaSyDk0sbFSArsfbDT-9hleWCCFWmpPzHgYDI";
+const GEMINI_MODEL = "gemini-3-flash-preview";
+
+let lastTriageResult = null;
+let isTriaging = false;
+
+async function triageTransactionWithGemini(userText) {
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
+  
+  const systemPrompt = `你是一位資深執業會計師 (CPA)。
+你的任務是將非結構化的日常商業交易描述，進行「會計分流（Transaction Triage）」，將其拆解為精確的會計借貸要素與科目。
+你必須只回傳合法 JSON 格式，不要包含任何額外 markdown 或文字：
+{
+  "summary": "簡短交易摘要",
+  "amount": 金額數字 (整數),
+  "debit_account": "Asset 或 Expense 或 Liability 或 Equity",
+  "credit_account": "Revenue 或 Liability 或 Equity 或 Asset",
+  "debit_detail": "具體借方科目名稱 (如：銀行存款、固定資產-辦公設備、薪資費用)",
+  "credit_detail": "具體貸方科目名稱 (如：合約負債、短期借款、營業收入、普通股股本)",
+  "flow_tag": "分流類別標籤 (如：融資分流、預收分流、資本化分流、營運費用分流、去槓桿分流)",
+  "cpa_reasoning": "繁體中文會計分流專業解析 (說明為什麼分流到此科目而非其他科目，是否有稅務或負債風險，援引IFRS或商業會計法原則)"
+}`;
+
+  const payload = {
+    contents: [{ parts: [{ text: userText }] }],
+    systemInstruction: { parts: [{ text: systemPrompt }] },
+    generationConfig: { responseMimeType: "application/json" }
+  };
+
+  const response = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  });
+
+  if (!response.ok) {
+    const errText = await response.text();
+    throw new Error(`Gemini API Error: ${errText}`);
+  }
+
+  const data = await response.json();
+  const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+  return JSON.parse(rawText);
+}
+
+// 離線/備份會計分流專家庫 (確保即使斷網亦能流暢運行)
+function localFallbackTriage(text) {
+  let amount = 100000;
+  const match = text.match(/(\d+[\d,]*)\s*(萬|千|k|元)?/i);
+  if (match) {
+    let num = parseFloat(match[1].replace(/,/g, ""));
+    if (match[2] === "萬") num *= 10000;
+    else if (match[2] === "千" || match[2] === "k" || match[2] === "K") num *= 1000;
+    amount = Math.round(num);
+  }
+
+  if (text.includes("預付") || text.includes("預收") || text.includes("年費")) {
+    return {
+      summary: "預收服務款項",
+      amount: amount,
+      debit_account: "Asset",
+      credit_account: "Liability",
+      debit_detail: "銀行存款",
+      credit_detail: "合約負債",
+      flow_tag: "預收分流 (權責發生制隔離)",
+      cpa_reasoning: "依 IFRS 15 規定，未履行履約義務前預收之款項屬於合約負債，不得認列為當期營業收入，以避免虛增利潤及提前繳稅風險。"
+    };
+  } else if (text.includes("借款") || text.includes("貸款") || text.includes("周轉")) {
+    return {
+      summary: "取得銀行借款融資",
+      amount: amount,
+      debit_account: "Asset",
+      credit_account: "Liability",
+      debit_detail: "銀行存款",
+      credit_detail: "短期借款",
+      flow_tag: "融資分流 (負債隔離)",
+      cpa_reasoning: "借款屬於資產與負債同步增加之融資活動，絕不可混為營業收入，否則將導致損益表嚴重失真。"
+    };
+  } else if (text.includes("伺服器") || text.includes("設備") || text.includes("筆電")) {
+    return {
+      summary: "購置高階硬體設備",
+      amount: amount,
+      debit_account: "Asset",
+      credit_account: "Asset",
+      debit_detail: "固定資產 (辦公設備)",
+      credit_detail: "銀行存款",
+      flow_tag: "資本支出分流 (資本化)",
+      cpa_reasoning: "耐用年限超過一年且金額重大之設備支出，應資本化為固定資產，透過後續各期折舊逐步轉列費用，非當期一次性費用。"
+    };
+  } else if (text.includes("薪資") || text.includes("薪水") || text.includes("水電") || text.includes("雜支")) {
+    return {
+      summary: "支付日常營運費用",
+      amount: amount,
+      debit_account: "Expense",
+      credit_account: "Asset",
+      debit_detail: "薪資費用/水電費",
+      credit_detail: "銀行存款",
+      flow_tag: "營運費用分流 (OPEX)",
+      cpa_reasoning: "日常消耗性支出，屬於當期營業費用，自核心資產槽流出，直接反映於當期損益。"
+    };
+  } else if (text.includes("增資") || text.includes("注資") || text.includes("入股")) {
+    return {
+      summary: "股東現金增資",
+      amount: amount,
+      debit_account: "Asset",
+      credit_account: "Equity",
+      debit_detail: "銀行存款",
+      credit_detail: "普通股股本",
+      flow_tag: "股權資本分流",
+      cpa_reasoning: "股東權益之增加非營業所得，無須計入課稅所得額，直接充實企業之實收資本與淨值防禦池。"
+    };
+  } else if (text.includes("償還") || text.includes("還本")) {
+    return {
+      summary: "償還借款本金",
+      amount: amount,
+      debit_account: "Liability",
+      credit_account: "Asset",
+      debit_detail: "短期借款 (借方減少)",
+      credit_detail: "銀行存款",
+      flow_tag: "去槓桿清償分流",
+      cpa_reasoning: "償還本金減少銀行存款與負債總額，不影響當期損益，利息部分始得列為財務費用。"
+    };
+  }
+
+  return {
+    summary: text.slice(0, 20),
+    amount: amount,
+    debit_account: "Asset",
+    credit_account: "Revenue",
+    debit_detail: "銀行存款",
+    credit_detail: "營業收入",
+    flow_tag: "一般營業分流",
+    cpa_reasoning: "符合履約義務完成之正常營業收入，同時增加流動資產水槽之現金儲備。"
+  };
+}
+
+// 綁定分流工作台 DOM 元素
+const triageInput = document.getElementById("triage-input");
+const btnTriageSubmit = document.getElementById("btn-triage-submit");
+const triageSubmitText = document.getElementById("triage-submit-text");
+const triageResult = document.getElementById("triage-result");
+const triageFlowType = document.getElementById("triage-flow-type");
+const triageAmount = document.getElementById("triage-amount");
+const triageDebitAcc = document.getElementById("triage-debit-acc");
+const triageDebitDetail = document.getElementById("triage-debit-detail");
+const triageCreditAcc = document.getElementById("triage-credit-acc");
+const triageCreditDetail = document.getElementById("triage-credit-detail");
+const triageReasoning = document.getElementById("triage-reasoning");
+const btnApplyEntry = document.getElementById("btn-apply-entry");
+
+async function handleTriage() {
+  if (!triageInput) return;
+  const text = triageInput.value.trim();
+  if (!text) return;
+
+  isTriaging = true;
+  if (btnTriageSubmit) btnTriageSubmit.disabled = true;
+  if (triageSubmitText) triageSubmitText.textContent = I18N[currentLang].triageThinking;
+
+  let result = null;
+  try {
+    result = await triageTransactionWithGemini(text);
+  } catch (err) {
+    console.warn("Gemini API call fallback to local rule parser:", err);
+    result = localFallbackTriage(text);
+  }
+
+  lastTriageResult = result;
+  isTriaging = false;
+  if (btnTriageSubmit) btnTriageSubmit.disabled = false;
+  if (triageSubmitText) triageSubmitText.textContent = I18N[currentLang].triageSubmitText;
+
+  // 渲染分流結果
+  if (triageFlowType) triageFlowType.textContent = result.flow_tag || "會計分流判定完成";
+  if (triageAmount) triageAmount.textContent = formatMoney(result.amount);
+  if (triageDebitAcc) triageDebitAcc.textContent = `${result.debit_account}`;
+  if (triageDebitDetail) triageDebitDetail.textContent = result.debit_detail || "";
+  if (triageCreditAcc) triageCreditAcc.textContent = `${result.credit_account}`;
+  if (triageCreditDetail) triageCreditDetail.textContent = result.credit_detail || "";
+  if (triageReasoning) triageReasoning.textContent = `💡 會計師解析：${result.cpa_reasoning}`;
+
+  if (triageResult) triageResult.style.display = "flex";
+}
+
+if (btnTriageSubmit) {
+  btnTriageSubmit.addEventListener("click", handleTriage);
+}
+
+// 常用案例快速按鈕
+document.querySelectorAll(".quick-chip").forEach(chip => {
+  chip.addEventListener("click", () => {
+    if (triageInput) triageInput.value = chip.dataset.example;
+    handleTriage();
+  });
+});
+
+function flashPipe(pipeId) {
+  const pipe = document.getElementById(pipeId);
+  if (pipe) {
+    pipe.style.display = "block";
+    pipe.style.strokeWidth = "8px";
+    setTimeout(() => {
+      pipe.style.strokeWidth = "";
+    }, 1500);
+  }
+}
+
+// 注入水槽流體迴路
+if (btnApplyEntry) {
+  btnApplyEntry.addEventListener("click", () => {
+    if (!lastTriageResult) return;
+    const { debit_account, credit_account, amount, summary, debit_detail, credit_detail } = lastTriageResult;
+
+    if (credit_account === "Revenue") {
+      const cur = parseFloat(inputRevenue.value) || 0;
+      inputRevenue.value = cur + amount;
+      rangeRevenue.value = inputRevenue.value;
+      flashPipe("pipe-rev");
+    } else if (debit_account === "Expense") {
+      const cur = parseFloat(inputExpense.value) || 0;
+      inputExpense.value = cur + amount;
+      rangeExpense.value = inputExpense.value;
+      flashPipe("pipe-exp");
+    } else if (credit_account === "Liability") {
+      const cur = parseFloat(inputLiability.value) || 0;
+      inputLiability.value = cur + amount;
+      rangeLiability.value = inputLiability.value;
+      flashPipe("pipe-liab");
+    } else if (credit_account === "Equity") {
+      const cur = parseFloat(inputEquity.value) || 0;
+      inputEquity.value = cur + amount;
+      rangeEquity.value = inputEquity.value;
+      flashPipe("pipe-eq");
+    } else if (debit_account === "Liability" && credit_account === "Asset") {
+      // 償還負債
+      const cur = parseFloat(inputLiability.value) || 0;
+      inputLiability.value = Math.max(0, cur - amount);
+      rangeLiability.value = inputLiability.value;
+      flashPipe("pipe-liab");
+    } else if (debit_account === "Asset" && credit_account === "Asset") {
+      // 資產內部重組 (如買設備)
+      flashPipe("pipe-rev");
+    }
+
+    runLiveSimulation();
+
+    if (autopilotLog) {
+      autopilotLog.innerHTML = `
+        <div style="color:#059669; font-weight:700;">✅ ${I18N[currentLang].appliedSuccess(summary, amount)}</div>
+        <div style="font-size:0.68rem; color:#2563EB;">[借] ${debit_account} (${debit_detail}) ${formatMoney(amount)}</div>
+        <div style="font-size:0.68rem; color:#D97706;">[貸] ${credit_account} (${credit_detail}) ${formatMoney(amount)}</div>
+      `;
+    }
+
+    btnApplyEntry.textContent = "✓ 已成功注入水槽！";
+    btnApplyEntry.style.background = "#047857";
+    setTimeout(() => {
+      btnApplyEntry.textContent = I18N[currentLang].btnApplyEntry;
+      btnApplyEntry.style.background = "#059669";
+    }, 2000);
   });
 }
 

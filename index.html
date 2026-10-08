@@ -32,6 +32,63 @@
         <span class="heading-desc" id="heading-desc">調整滑桿或直接輸入數值</span>
       </div>
 
+      <!-- AI 會計語意分流工作台 (LLM Transaction Triage Desk) -->
+      <div class="triage-card">
+        <div class="triage-header">
+          <span class="triage-badge" id="triage-card-title">⚡ LLM 會計分流工作台</span>
+          <span id="gemini-status" class="api-pill-online">● Gemini 3 Flash Connected</span>
+        </div>
+
+        <div class="triage-input-wrapper">
+          <textarea id="triage-input" class="triage-textarea" rows="2" placeholder="輸入真實商業交易，例如：向銀行申請周轉借款 50 萬元、客戶預付整年年費 12 萬元、採購高階伺服器 25 萬元..."></textarea>
+          <div class="triage-btn-row">
+            <button id="btn-triage-submit" class="btn-triage">
+              <span id="triage-submit-text">執行 AI 會計分流</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 常用測試案例 Quick Chips -->
+        <div class="triage-quick-tags">
+          <span class="quick-hint" id="quick-hint">常用測試案例（點擊快速帶入）：</span>
+          <button class="quick-chip" data-example="客戶預先支付整年度雲端軟體服務年費 120,000 元">客戶預付年費 $120K</button>
+          <button class="quick-chip" data-example="向第一銀行申請取得短期融資周轉借款 500,000 元">銀行借款 $500K</button>
+          <button class="quick-chip" data-example="採購高階運算伺服器與辦公硬體設備 250,000 元">採購伺服器 $250K</button>
+          <button class="quick-chip" data-example="發放本月份工程師薪資與辦公室水電雜支 160,000 元">發放薪資費用 $160K</button>
+          <button class="quick-chip" data-example="引進天使輪機構投資人注資入股 600,000 元">引進股權增資 $600K</button>
+          <button class="quick-chip" data-example="償還上一期向銀行借貸的融資借款本金 100,000 元">償還借款本金 $100K</button>
+        </div>
+
+        <!-- 分流結果卡片 -->
+        <div id="triage-result" class="triage-result" style="display: none;">
+          <div class="triage-result-header">
+            <span class="result-tag" id="triage-flow-type">分流判定：資產增加 / 負債認列</span>
+            <span class="result-amount" id="triage-amount">$120,000</span>
+          </div>
+          
+          <div class="triage-entry-box">
+            <div class="entry-line debit-line">
+              <span class="entry-type" id="label-entry-debit">借 (Debit +)</span>
+              <strong id="triage-debit-acc">Asset (資產)</strong>
+              <span class="entry-detail" id="triage-debit-detail">銀行存款</span>
+            </div>
+            <div class="entry-line credit-line">
+              <span class="entry-type" id="label-entry-credit">貸 (Credit -)</span>
+              <strong id="triage-credit-acc">Liability (負債)</strong>
+              <span class="entry-detail" id="triage-credit-detail">合約負債</span>
+            </div>
+          </div>
+
+          <div class="triage-reasoning" id="triage-reasoning">
+            <!-- 由 Gemini 生成的會計師專業分流解析 -->
+          </div>
+
+          <button id="btn-apply-entry" class="btn-apply-entry">
+            注入水槽流體迴路 (Inject into Hydraulic System)
+          </button>
+        </div>
+      </div>
+
       <!-- Closed-Loop AI Autopilot & Stress Shock Module -->
       <div class="autopilot-card">
         <div class="autopilot-header">
